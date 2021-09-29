@@ -1,0 +1,38 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-edit-about-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">EDIT INFO</div>
+    <span class="horizontal-spacer"></span>
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <form class="orient-contents-vertically-dialog popup-form-content" [formGroup]="aboutForm" (ngSubmit)="OnSubmitAbout()">
+    <mat-label class="form-label">Describe Yourself</mat-label>
+    <mat-form-field appearance="outline" >
+      <mat-label>Short Description About Yourself</mat-label>
+      <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5" placeholder="Description" maxlength="150" type="text" formControlName="description"></textarea>
+      <mat-hint align="end">{{description.value?.length || 0}}/150</mat-hint>
+      <button mat-button *ngIf="description.dirty" matSuffix mat-icon-button aria-label="Clear" (click)="aboutForm.controls['description'].reset()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-label>About You</mat-label>
+    <quill-editor class="divider" formControlName="about"></quill-editor>
+
+    <mat-label class="form-label">Media</mat-label>
+    <mat-form-field appearance="outline" >
+      <mat-label>Website</mat-label>
+      <input matInput placeholder="Website" type="text" formControlName="website"/>
+    </mat-form-field>
+    
+    <div class="orient-contents-horizontally-dialog">
+      <span class="horizontal-spacer"></span>
+      <span class="horizontal-spacer"></span>
+      <button mat-raised-button color="primary" type="submit" >Save</button>
+    </div>
+  </form>
+</div>

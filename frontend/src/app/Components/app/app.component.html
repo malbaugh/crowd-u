@@ -1,0 +1,117 @@
+<html>
+  <mat-toolbar *ngIf="this.currentUser.CurrentUserValue" class="toolbar">
+    <mat-toolbar-row>
+
+      <a routerLink="/">
+        <img class="app-logo" src="https://crowd-u-public-assets.s3.amazonaws.com/logoDark.png">
+      </a>
+
+      <span class="horizontal-spacer"></span>
+
+      <form *ngIf="this.currentUser.UserLocation != '/search'" [formGroup]="searchForm" (ngSubmit)="OnSearchSubmit()">
+        <mat-form-field class="app-search white-color">
+          <input class="white-color" formControlName="search" type="text" matInput>
+        </mat-form-field>
+
+        <button class="app-search-button" (onClick)="OnSearchSubmit()" type="submit" mat-icon-button>
+          <mat-icon class="white-color" matSuffix>search</mat-icon>
+        </button>
+      </form>
+
+      <span class="app-search-space"></span>
+      <button *ngIf="(this.currentUser.UserLocation == '/search')" routerLink="/search" mat-icon-button><mat-icon class="white-color" matSuffix>search</mat-icon></button>
+
+      <button class="app-white-buttons" *ngIf="ParticipantTest(currentUser.CurrentUserValue)" (click)="OnParticipantHome()" mat-button>Home</button>
+      <button class="app-white-buttons" *ngIf="ParticipantTest(currentUser.CurrentUserValue)" [matMenuTriggerFor]="menu5" mat-button>My Challenges</button>
+      <mat-menu #menu5="matMenu">
+        <button (click)="OnParticipantContests()" mat-menu-item>Contests</button>
+        <button (click)="OnParticipantContracts()" mat-menu-item>Contracts</button>
+      </mat-menu>
+      <button class="app-white-buttons" *ngIf="ParticipantTest(currentUser.CurrentUserValue)" (click)="OnParticipantTeams()" mat-button>Teams</button>
+      <button class="app-white-buttons" *ngIf="ParticipantTest(currentUser.CurrentUserValue)" (click)="OnParticipantProfile()" mat-button>My Profile</button>
+      <button class="app-white-buttons" *ngIf="ParticipantTest(currentUser.CurrentUserValue)" (click)="OnReport()" mat-icon-button><mat-icon matSuffix>help_outline</mat-icon></button>
+
+      <button class="app-white-buttons" *ngIf="ParticipantTest(currentUser.CurrentUserValue)" [matMenuTriggerFor]="menu1" mat-button><mat-icon>menu</mat-icon></button>
+      <mat-menu #menu1="matMenu">
+        <button (click)="OnParticipantGetSubmissions()" mat-menu-item>My Submissions</button>
+        <button (click)="OnParticipantAccountSettings()" mat-menu-item>Account Settings</button>
+        <button (click)="OnParticipantLogout()" mat-menu-item>Logout</button>
+      </mat-menu>
+
+      <button class="app-mobile-menu" *ngIf="ParticipantTest(currentUser.CurrentUserValue)" (click)="OnReport()" mat-icon-button><mat-icon class="white-color"matSuffix>help_outline</mat-icon></button>
+      <button class="app-mobile-menu" *ngIf="ParticipantTest(currentUser.CurrentUserValue)" [matMenuTriggerFor]="menu2" mat-button><mat-icon class="white-color">menu</mat-icon></button>
+      <mat-menu #menu2="matMenu">
+        <button (click)="OnParticipantHome()" mat-menu-item>Home</button>
+        <button (click)="OnParticipantContests()" mat-menu-item>My Contests</button>
+        <button (click)="OnParticipantContracts()" mat-menu-item>My Contracts</button>
+        <button (click)="OnParticipantTeams()" mat-menu-item>Teams</button>
+        <button (click)="OnParticipantProfile()" mat-menu-item>My Profile</button>
+        <button (click)="OnParticipantGetSubmissions()" mat-menu-item>My Submissions</button>
+        <button (click)="OnParticipantAccountSettings()" mat-menu-item>Account Settings</button>
+        <button (click)="OnParticipantLogout()" mat-menu-item>Logout</button>
+      </mat-menu>
+
+      <button class="app-white-buttons" *ngIf="ChallengerTest(currentUser.CurrentUserValue)" (click)="OnChallengerHome()" mat-button>Home</button>
+      <button class="app-white-buttons" *ngIf="ChallengerTest(currentUser.CurrentUserValue)" (click)="OnChallengerChallenges()" mat-button>My Challenges</button>
+      <button class="app-white-buttons" *ngIf="ChallengerTest(currentUser.CurrentUserValue)" (click)="OnChallengerOrganization()" mat-button>Departments</button>
+      <button class="app-white-buttons" *ngIf="ChallengerTest(currentUser.CurrentUserValue)" (click)="OnChallengerProfile()" mat-button>My Profile</button>
+      <button class="app-white-buttons" *ngIf="ChallengerTest(currentUser.CurrentUserValue)" (click)="OnReport()" mat-icon-button><mat-icon matSuffix>help_outline</mat-icon></button>
+
+      <button class="app-white-buttons" *ngIf="ChallengerTest(currentUser.CurrentUserValue)" [matMenuTriggerFor]="menu3" mat-button><mat-icon>menu</mat-icon></button>
+      <mat-menu #menu3="matMenu">
+        <button (click)="OnChallengerAccountSettings()" mat-menu-item>Account Settings</button>
+        <button (click)="OnChallengerLogout()" mat-menu-item>Logout</button>
+      </mat-menu>
+
+      <button class="app-mobile-menu" *ngIf="ChallengerTest(currentUser.CurrentUserValue)" (click)="OnReport()" mat-icon-button><mat-icon class="white-color" matSuffix>help_outline</mat-icon></button>
+      <button class="app-mobile-menu" *ngIf="ChallengerTest(currentUser.CurrentUserValue)" [matMenuTriggerFor]="menu4" mat-button><mat-icon class="white-color">menu</mat-icon></button>
+      <mat-menu #menu4="matMenu">
+        <button (click)="OnChallengerHome()" mat-menu-item>Home</button>
+        <button (click)="OnChallengerChallenges()" mat-menu-item>My Challenges</button>
+        <button (click)="OnChallengerOrganization()" mat-menu-item>Departments</button>
+        <button (click)="OnChallengerProfile()" mat-menu-item>My Profile</button>
+        <button (click)="OnChallengerAccountSettings()" mat-menu-item>Account Settings</button>
+        <button (click)="OnChallengerLogout()" mat-menu-item>Logout</button>
+      </mat-menu>
+
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-toolbar *ngIf="!(this.currentUser.CurrentUserValue) && (this.currentUser.UserLocation != '/')" class="toolbar">
+    <mat-toolbar-row>
+      <a routerLink="/">
+        <img class="app-logo" src="https://crowd-u-public-assets.s3.amazonaws.com/logoDark.png">
+      </a>
+      
+      <span class="horizontal-spacer"></span>
+
+      <form *ngIf="this.currentUser.UserLocation != '/search'" [formGroup]="searchForm" (ngSubmit)="OnSearchSubmit()">
+        <mat-form-field class="app-search white-color">
+          <input class="white-color" formControlName="search" type="text" matInput>
+        </mat-form-field>
+
+        <button class="app-search-button" (onClick)="OnSearchSubmit()" type="submit" mat-icon-button>
+          <mat-icon class="white-color" matSuffix>search</mat-icon>
+        </button>
+      </form>
+
+      <span class="app-search-space"></span>
+
+      <button class="app-white-buttons" (click)="OnLogin()" mat-button>Login</button>
+      <button class="app-white-buttons" *ngIf="this.currentUser.UserLocation != '/registration'" (click)="OnRegister()" mat-button>Register</button>
+      <button class="app-white-buttons" (click)="OnHome()" mat-button>Home</button>
+
+      <button class="app-mobile-menu" [matMenuTriggerFor]="menu5" mat-button><mat-icon class="white-color">menu</mat-icon></button>
+      <mat-menu #menu5="matMenu">
+        <button (click)="OnLogin()" mat-menu-item>Login</button>
+        <button *ngIf="this.currentUser.UserLocation != '/registration'" (click)="OnRegister()" mat-menu-item>Register</button>
+        <button (click)="OnHome()" mat-menu-item>Home</button>
+      </mat-menu>
+      
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <!-- DO NOT REMOVE -->
+  <router-outlet></router-outlet>
+  <!-- DO NOT REMOVE -->
+</html>
+  

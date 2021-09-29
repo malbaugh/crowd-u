@@ -1,0 +1,226 @@
+<div *ngIf="!dataLoaded1 && !dataLoaded2 && !dataLoaded3" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="(!loaded1 || !loaded2 || !loaded3) && (dataLoaded1 && dataLoaded2 && dataLoaded3)" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<html *ngIf="dataLoaded1 && dataLoaded2 && dataLoaded3" class="orient-contents-vertically search-form-main">
+  <mat-toolbar class="primary-light">
+    <mat-toolbar-row>
+      <div class="search-toolbar-info">{{header}}</div>
+      <span class="horizontal-spacer"></span>
+    </mat-toolbar-row>
+
+    <mat-toolbar-row>
+      <button class="sidenav-filter-button" type="button" color="primary" (click)="drawer.toggle()" matTooltip="Filter the results." matTooltipPosition="above" mat-mini-fab><mat-icon>filter_list</mat-icon></button>
+      <span class="horizontal-spacer"></span>
+
+      <form [formGroup]="searchForm" (ngSubmit)="OnSearchSubmit()">
+        <mat-form-field class="search-form">
+          <input formControlName="search" type="text" matInput>
+        </mat-form-field>
+
+        <button (onClick)="OnSearchSubmit()" mat-icon-button>
+          <mat-icon color="primary" matSuffix>search</mat-icon>
+        </button>
+      </form>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+
+  <mat-drawer-container class="search-container">
+    <mat-drawer class="sidenav" mode="side" #drawer>
+      <form class="sidenav-content" [formGroup]="filterForm" (ngSubmit)="OnSearchSubmit()">
+        <div class="orient-contents-horizontally sidenav-filter-title sidenav-information">
+          <mat-card-title class="item-title-no-padding">FILTERS</mat-card-title>
+          <span class="horizontal-spacer"></span>
+          <div><button color="primary" (click)="OnResetFilters()" mat-icon-button><mat-icon matSuffix>cached</mat-icon></button></div>
+        </div>
+
+        <div class="orient-contents-vertically sidenav-information">
+          <mat-label>Date of Challenge</mat-label>
+          <mat-form-field appearance="outline" >
+            <mat-label>Starting Date</mat-label>
+            <input matInput [matDatepicker]="picker1" placeholder="Starting Date" formControlName="start" >
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" >
+            <mat-label>Closing Date</mat-label>
+            <input matInput [matDatepicker]="picker2" placeholder="Closing Date" formControlName="close" >
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+
+          <mat-label>Amount Awarded</mat-label>
+          <div class="orient-contents-vertically" formGroupName="award">
+            <mat-form-field appearance="outline">
+              <span matPrefix>$ &nbsp;</span>
+              <mat-label>Minimum</mat-label>
+              <input matInput formControlName="min" type="number" placeholder="Min">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <span matPrefix>$ &nbsp;</span>
+              <mat-label>Maximum</mat-label>
+              <input matInput formControlName="max" type="number" placeholder="Max">
+            </mat-form-field>
+          </div>
+        </div>
+        
+        <div class="orient-contents-vertically sidenav-information">
+          <mat-label>Concentrations</mat-label>
+          <mat-form-field appearance="outline" >
+            <mat-label>Concentration 1</mat-label>
+            <mat-select type="text" formControlName="concentrationOne">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let i of concentrations" [value]="i">
+                {{ i }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" >
+            <mat-label>Concentration 2</mat-label>
+            <mat-select type="text" formControlName="concentrationTwo">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let i of concentrations" [value]="i">
+                {{ i }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" >
+            <mat-label>Concentration 3</mat-label>
+            <mat-select type="text" formControlName="concentrationThree">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let i of concentrations" [value]="i">
+                {{ i }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="orient-contents-horizontally">
+            <span class="horizontal-spacer"></span>
+            <span class="horizontal-spacer"></span>
+            <button mat-raised-button color="primary" type="submit">Go</button>
+          </div>
+        </div>
+      </form>
+    </mat-drawer>
+
+
+    <mat-drawer-content class="drawer-content">
+      <mat-tab-group class="tab-container" (selectedTabChange)="TabChanged($event)">
+
+        <mat-tab label="Following">
+          <div *ngIf="loaded1" class="tab-content">
+            <mat-list *ngFor="let contest of pageFollowedContests" [class.selected]="contest === selectedContest" (click)="onSelect(contest)">
+              <mat-card class="item-card">
+                <div><img [src]="contest.ContestData.Photo ? contest.ContestData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="item-header-image primary-border"></div>
+                <div class="item-content orient-contents-vertically">
+                  <mat-card-title class="profile-title profile-about-line">{{contest.ContestData.Name}}</mat-card-title>
+
+                  <p class="profile-subtitle profile-about-line">{{contest.ContestData.Description}}</p>
+
+                  <div class="orient-contents-horizontally left-justify-contents">
+                    <mat-icon color="primary">event_note</mat-icon>
+                    <div class="profile-left-padding">Entries due by {{contest.ContestData.SubmitDate.getUTCMonth() + 1}}/{{contest.ContestData.SubmitDate.getUTCDate()}}/{{contest.ContestData.SubmitDate.getUTCFullYear()}}</div>
+                  </div>
+
+                  <span class="search-mobile-remove-padding"></span>
+                  <mat-chip-list class="orient-contents-horizontally search-chips">
+                    <mat-chip color="primary" selected>{{contest.ContestData.Concentrations[0]}}</mat-chip>
+                    <mat-chip *ngIf="contest.ContestData.Concentrations[1]" color="primary" selected>{{contest.ContestData.Concentrations[1]}}</mat-chip>
+                    <mat-chip *ngIf="contest.ContestData.Concentrations[2]" color="primary" selected>{{contest.ContestData.Concentrations[2]}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+
+                <span class="search-mobile-remove-padding"></span>
+                <div class="item-right">
+                  <mat-card-title class="item-title">Prize: ${{contest.ContestData.PrizeTotal.toLocaleString('en')}}</mat-card-title>
+                  <span class="search-mobile-remove-padding"></span>
+                  <span class="search-mobile-remove-padding"></span>
+                </div>
+              </mat-card>
+            </mat-list>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Registered">
+          <div *ngIf="loaded2" class="tab-content">
+            <mat-list *ngFor="let contest of pageRegisteredContests" [class.selected]="contest === selectedContest" (click)="onSelect(contest)">
+              <mat-card class="item-card">
+                <div><img [src]="contest.ContestData.Photo ? contest.ContestData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="item-header-image primary-border"></div>
+                <div class="item-content orient-contents-vertically">
+                  <mat-card-title class="profile-title profile-about-line">{{contest.ContestData.Name}}</mat-card-title>
+
+                  <p class="profile-subtitle profile-about-line">{{contest.ContestData.Description}}</p>
+
+                  <div class="orient-contents-horizontally left-justify-contents">
+                    <mat-icon color="primary">event_note</mat-icon>
+                    <div class="profile-left-padding">Entries due by {{contest.ContestData.SubmitDate.getUTCMonth() + 1}}/{{contest.ContestData.SubmitDate.getUTCDate()}}/{{contest.ContestData.SubmitDate.getUTCFullYear()}}</div>
+                  </div>
+
+                  <span class="search-mobile-remove-padding"></span>
+                  <mat-chip-list class="orient-contents-horizontally search-chips">
+                    <mat-chip color="primary" selected>{{contest.ContestData.Concentrations[0]}}</mat-chip>
+                    <mat-chip *ngIf="contest.ContestData.Concentrations[1]" color="primary" selected>{{contest.ContestData.Concentrations[1]}}</mat-chip>
+                    <mat-chip *ngIf="contest.ContestData.Concentrations[2]" color="primary" selected>{{contest.ContestData.Concentrations[2]}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+
+                <span class="search-mobile-remove-padding"></span>
+                <div class="item-right">
+                  <mat-card-title class="item-title">Prize: ${{contest.ContestData.PrizeTotal.toLocaleString('en')}}</mat-card-title>
+                  <span class="search-mobile-remove-padding"></span>
+                  <span class="search-mobile-remove-padding"></span>
+                </div>
+              </mat-card>
+            </mat-list>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Submitted">
+          <div *ngIf="loaded3" class="tab-content">
+            <mat-list *ngFor="let contest of pageCompletedContests" [class.selected]="contest === selectedContest" (click)="onSelect(contest)">
+              <mat-card class="item-card">
+                <div><img [src]="contest.ContestData.Photo ? contest.ContestData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="item-header-image primary-border"></div>
+                <div class="item-content orient-contents-vertically">
+                  <mat-card-title class="profile-title profile-about-line">{{contest.ContestData.Name}}</mat-card-title>
+
+                  <p class="profile-subtitle profile-about-line">{{contest.ContestData.Description}}</p>
+
+                  <div class="orient-contents-horizontally left-justify-contents">
+                    <mat-icon color="primary">event_note</mat-icon>
+                    <div class="profile-left-padding">Entries due by {{contest.ContestData.SubmitDate.getUTCMonth() + 1}}/{{contest.ContestData.SubmitDate.getUTCDate()}}/{{contest.ContestData.SubmitDate.getUTCFullYear()}}</div>
+                  </div>
+
+                  <span class="search-mobile-remove-padding"></span>
+                  <mat-chip-list class="orient-contents-horizontally search-chips">
+                    <mat-chip color="primary" selected>{{contest.ContestData.Concentrations[0]}}</mat-chip>
+                    <mat-chip *ngIf="contest.ContestData.Concentrations[1]" color="primary" selected>{{contest.ContestData.Concentrations[1]}}</mat-chip>
+                    <mat-chip *ngIf="contest.ContestData.Concentrations[2]" color="primary" selected>{{contest.ContestData.Concentrations[2]}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+
+                <span class="search-mobile-remove-padding"></span>
+                <div class="item-right">
+                  <mat-card-title class="item-title">Prize: ${{contest.ContestData.PrizeTotal.toLocaleString('en')}}</mat-card-title>
+                  <span class="search-mobile-remove-padding"></span>
+                  <span class="search-mobile-remove-padding"></span>
+                </div>
+              </mat-card>
+            </mat-list>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+
+      <span class="horizontal-spacer"></span>
+      <mat-paginator class="tab-paginator" *ngIf="currentTabIndex == 0" [pageIndex]="pageIndex1" [length]="allFollowedContests.length" [pageSize]="pageSize1" [pageSizeOptions]="pageSizeOptions" (page)="GetFollowedContests($event)"></mat-paginator>
+      <mat-paginator class="tab-paginator" *ngIf="currentTabIndex == 1" [pageIndex]="pageIndex2" [length]="allRegisteredContests.length" [pageSize]="pageSize2" [pageSizeOptions]="pageSizeOptions" (page)="GetRegisteredContests($event)"></mat-paginator>
+      <mat-paginator class="tab-paginator" *ngIf="currentTabIndex == 2" [pageIndex]="pageIndex3" [length]="allCompletedContests.length" [pageSize]="pageSize3" [pageSizeOptions]="pageSizeOptions" (page)="GetCompletedContests($event)"></mat-paginator>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</html>

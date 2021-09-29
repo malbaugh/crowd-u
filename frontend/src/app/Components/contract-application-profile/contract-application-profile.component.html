@@ -1,0 +1,153 @@
+<div *ngIf="!dataLoaded" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="dataLoaded" class="profile-form-main orient-contents-vertically">
+  <div class="profile-action-icons orient-contents-horizontally">
+    <button *ngIf="mySubmission && !submission.Submitted && !contract.ContractData.Completed" (click)="file1.click()" matTooltip="Finalize your application and attach files." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">post_add</mat-icon></button>
+    <input id="imageInput" type='file' (change)="SubmitFiles($event.target.files)" #file1 multiple>
+    <button *ngIf="mySubmission && !submission.Submitted && !contract.ContractData.Completed" (click)="OnEdit()" matTooltip="Edit your application." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">edit</mat-icon></button>
+    
+    <span class="horizontal-spacer"></span>
+    
+    <button *ngIf="mySubmission && !submission.Submitted && !contract.ContractData.Completed" (click)="OnDeleteSubmission()" matTooltip="Delete this application." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">close</mat-icon></button>
+  </div>
+  
+  <div class="profile-content">
+    <div class="profile-image-container center-contents">
+      <img [src]="submission.Photo ? submission.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="profile-image primary-border">
+      <div (click)="file2.click()" class="profile-edit-photo" *ngIf="mySubmission && !submission.Submitted && !contract.ContractData.Completed"><button mat-mini-fab><mat-icon>edit</mat-icon></button></div>
+      <input id="imageInput" accept="image/*" type='file' (change)="EditProfileImage($event)" #file2>
+    </div>
+
+    <div class="profile-information orient-contents-vertically">
+      <div class="orient-contents-horizontally profile-info-line">
+        <h2 class="profile-title">{{submission.Name}}</h2>
+        <span class="profile-padding"></span>
+      </div>
+
+      <p class="profile-subtitle profile-info-line">{{submission.Description}}</p>
+      <div *ngIf="mySubmission && !submission.Submitted" class="orient-contents-horizontally profile-info-line">
+        <mat-icon color="primary">event_note</mat-icon>
+        <div class="profile-left-padding" >Apply by {{contract.ContractData.SubmitDate.getUTCMonth() + 1}}/{{contract.ContractData.SubmitDate.getUTCDate()}}/{{contract.ContractData.SubmitDate.getUTCFullYear()}}</div>
+      </div>
+
+      <p *ngIf="submission.Submitted" class="profile-statistics profile-info-line">Favorites: {{favoriteCount}}</p>
+
+      <span class="profile-padding"></span>
+      <mat-chip-list class="orient-contents-horizontally">
+        <mat-chip *ngIf="submission.TeamName" color="primary-light" selected>Team: {{submission.TeamName}}</mat-chip>
+        <mat-chip *ngIf="!submission.TeamName" color="primary-light" selected>Individual Application</mat-chip>
+        <mat-chip *ngIf="submission.WinnerType" color="primary" selected>{{submission.WinnerType}}</mat-chip>
+      </mat-chip-list>
+    </div>
+
+    <span class="profile-padding"></span>
+    <div class="orient-contents-vertically profile-right-section">
+      <span class="profile-padding"></span>
+      <div *ngIf="mySubmission && submission.Submitted" class="orient-contents-horizontally profile-competing">
+        <span class="profile-padding"></span>
+        <span class="profile-padding"></span>
+        <span class="profile-mobile-padding"></span>
+        <mat-chip color="primary" selected>Application Complete</mat-chip>
+        <span class="profile-mobile-padding"></span>
+      </div>
+
+      <span class="profile-padding"></span>
+      <div *ngIf="mySubmission" class="orient-contents-horizontally profile-competing">
+        <span class="profile-padding"></span>
+        <span class="profile-padding"></span>
+        <span class="profile-mobile-padding"></span>
+        <mat-chip *ngIf="contract.ContractData.Completed && !contract.ContractData.WinnerSelected" matTooltip="The contract closed and winners are being selected." matTooltipPosition="above" color="primary" selected>Contract Closed</mat-chip>
+        <span class="profile-mobile-padding"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-about orient-contents-vertically">
+    <div class="orient-contents-horizontally center-contents profile-about-line">
+      <mat-card-title class="profile-title">Information:</mat-card-title>
+      <span class="horizontal-spacer"></span>
+    </div>
+
+    <mat-tab-group [color]="'primary'" [backgroundColor]="'accent'" class="profile-tabs">      
+      <mat-tab *ngIf="submission.About">
+        <ng-template mat-tab-label>
+          Description
+        </ng-template>
+
+        <div [innerHtml]="submission.About"></div>
+      </mat-tab>
+
+      <mat-tab *ngIf="contract">
+        <ng-template mat-tab-label>
+          Contract Information
+        </ng-template>
+
+        <div>
+          <mat-list *ngFor="let contract of contracts">
+            <mat-card class="winner-selection-card">
+              <div class="winner-selection-image-container center-contents">
+                <img [src]="contract.ContractData.Photo ? contract.ContractData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="winner-selection-image primary-border">
+              </div>
+          
+              <div class="winner-selection-information orient-contents-vertically">
+                <h2 class="winner-selection-title">{{contract.ContractData.Name}}</h2>
+                <p class="winner-selection-subtitle">{{contract.ContractData.Description}}</p>
+          
+                <span class="winner-selection-padding"></span>
+          
+                <mat-chip-list class="orient-contents-horizontally">
+                  <mat-chip color="primary" *ngIf="contract.ContractData.Concentrations[0]" selected>{{contract.ContractData.Concentrations[0]}}</mat-chip>
+                  <mat-chip color="primary" *ngIf="contract.ContractData.Concentrations[1]" selected>{{contract.ContractData.Concentrations[1]}}</mat-chip>
+                  <mat-chip color="primary" *ngIf="contract.ContractData.Concentrations[2]" selected>{{contract.ContractData.Concentrations[2]}}</mat-chip>
+                </mat-chip-list>
+              </div>
+              <span class="horizontal-spacer"></span>
+
+              <div class="orient-contents-horizontally center-contents">
+                <span class="horizontal-spacer"></span>
+                <div><button (click)="OnSeeContract()" matTooltip="See this contract's profile." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">emoji_objects</mat-icon></button></div>
+              </div>
+            </mat-card>
+          </mat-list>
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="submission.Members">
+        <ng-template mat-tab-label>
+          Team
+        </ng-template>
+
+        <div>
+          <mat-list *ngFor="let member of members" [class.selected]="member === selectedMember">
+            <mat-card class="winner-selection-card">
+              <div class="winner-selection-image-container center-contents">
+                <img [src]="member.ParticipantProfileData.Photo ? member.ParticipantProfileData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="winner-selection-image primary-border">
+              </div>
+          
+              <div class="winner-selection-information orient-contents-vertically">
+                <h2 class="winner-selection-title">{{member.ParticipantRegistrationData.FirstName}} {{member.ParticipantRegistrationData.LastName}}</h2>
+                <p class="winner-selection-subtitle">{{member.ParticipantProfileData.Description}}</p>
+          
+                <span class="winner-selection-padding"></span>
+          
+                <mat-chip-list class="orient-contents-horizontally">
+                  <mat-chip color="primary" *ngIf="member.ParticipantProfileData.Concentration[0]" selected>{{member.ParticipantProfileData.Concentration[0]}}</mat-chip>
+                  <mat-chip color="primary" *ngIf="member.ParticipantProfileData.Concentration[1]" selected>{{member.ParticipantProfileData.Concentration[1]}}</mat-chip>
+                  <mat-chip color="primary" *ngIf="member.ParticipantProfileData.Concentration[2]" selected>{{member.ParticipantProfileData.Concentration[2]}}</mat-chip>
+                </mat-chip-list>
+              </div>
+              <span class="horizontal-spacer"></span>
+
+              <div class="orient-contents-horizontally center-contents">
+                <span class="horizontal-spacer"></span>
+                <div><button (click)="OnSeeProfile(member)" matTooltip="See this user's profile." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">person</mat-icon></button></div>
+              </div>
+            </mat-card>
+          </mat-list>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

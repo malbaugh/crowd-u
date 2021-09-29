@@ -1,0 +1,188 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+// We should add more paletts for other universities as we add them
+// Define Custom Palettes
+$purdue-primary-color: (
+    50 : #f9f5ea,
+    100 : #f0e6ca,
+    200 : #e7d5a6,
+    300 : #ddc482,
+    400 : #d5b868,
+    500 : #ceab4d,
+    600 : #c9a446,
+    700 : #c29a3d,
+    800 : #bc9134,
+    900 : #b08025,
+    A100 : #fff9ed,
+    A200 : #ffe6ba,
+    A400 : #ffd387,
+    A700 : #ffca6e,
+    contrast: (
+        50 : #282e34,
+        100 : #282e34,
+        200 : #282e34,
+        300 : #282e34,
+        400 : #282e34,
+        500 : #282e34,
+        600 : #f4f4f4,
+        700 : #f4f4f4,
+        800 : #f4f4f4,
+        900 : #f4f4f4,
+        A100 : #282e34,
+        A200 : #282e34,
+        A400 : #282e34,
+        A700 : #282e34,
+    )
+);
+
+$purdue-accent-color: (
+    50 : #e5e6e7,
+    100 : #bfc0c2,
+    200 : #94979a,
+    300 : #696d71,
+    400 : #484d52,
+    500 : #282e34,
+    600 : #24292f,
+    700 : #1e2327,
+    800 : #181d21,
+    900 : #0f1215,
+    A100 : #5aadff,
+    A200 : #2793ff,
+    A400 : #007af3,
+    A700 : #006dda,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #ffffff,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #ffffff,
+        A400 : #ffffff,
+        A700 : #ffffff,
+    )
+);
+    
+/*
+mat-palette([material-color], [default hue], [light hue], [dark hue]
+*/
+$crowd-u-app-primary: mat-palette($purdue-primary-color, 500, 200, 700);
+$crowd-u-app-accent:  mat-palette($purdue-accent-color, 500, 200, 700);
+$crowd-u-app-warn:    mat-palette($mat-red, 800);
+
+$crowd-u-app-theme: mat-light-theme($crowd-u-app-primary, $crowd-u-app-accent, $crowd-u-app-warn);
+
+@include angular-material-theme($crowd-u-app-theme);
+
+
+// Primary Background
+@mixin primary-background-theme($theme) {
+    $background: mat-palette($crowd-u-app-primary, 500);
+
+    .primary-background {
+        background-color: mat-color($background) !important;
+        color: #f4f4f4 !important;
+    }
+}
+@mixin primary-light-background-theme($theme) {
+    $background: mat-palette($crowd-u-app-primary, 200);
+
+    .primary-light-background {
+        background-color: mat-color($background) !important;
+    }
+}
+@mixin primary-dark-background-theme($theme) {
+    $background: mat-palette($crowd-u-app-primary, 700);
+
+    .primary-dark-background {
+        background-color: mat-color($background) !important;
+        color: #f4f4f4 !important;
+    }
+}
+// Primary Border
+@mixin primary-border-theme($theme) {
+    $background: mat-palette($crowd-u-app-primary, 500);
+
+    .primary-border {
+        border-color: mat-color($background) !important;
+    }
+}
+@mixin primary-light-border-theme($theme) {
+    $background: mat-palette($crowd-u-app-primary, 200);
+
+    .primary-light-border {
+        border-color: mat-color($background) !important;
+    }
+}
+@mixin primary-dark-border-theme($theme) {
+    $background: mat-palette($crowd-u-app-primary, 700);
+
+    .primary-dark-border {
+        border-color: mat-color($background) !important;
+    }
+}
+// Accent Background
+@mixin accent-background-theme($theme) {
+    $background: mat-palette($crowd-u-app-accent, 500);
+
+    .accent-background {
+        background-color: mat-color($background) !important;
+        color: #f4f4f4 !important;
+    }
+}
+@mixin accent-light-background-theme($theme) {
+    $background: mat-palette($crowd-u-app-accent, 200);
+
+    .accent-light-background {
+        background-color: mat-color($background) !important;
+    }
+}
+@mixin accent-dark-background-theme($theme) {
+    $background: mat-palette($crowd-u-app-accent, 700);
+
+    .accent-dark-background {
+        background-color: mat-color($background) !important;
+        color: #f4f4f4 !important;
+    }
+}
+// Accent Border
+@mixin accent-border-theme($theme) {
+    $background: mat-palette($crowd-u-app-accent, 500);
+
+    .accent-border {
+        border-color: mat-color($background) !important;
+    }
+}
+@mixin accent-light-border-theme($theme) {
+    $background: mat-palette($crowd-u-app-accent, 200);
+
+    .accent-light-border {
+        border-color: mat-color($background) !important;
+    }
+}
+@mixin accent-dark-border-theme($theme) {
+    $background: mat-palette($crowd-u-app-accent, 700);
+
+    .accent-dark-border {
+        border-color: mat-color($background) !important;
+    }
+}
+
+@include primary-background-theme($crowd-u-app-theme);
+@include primary-light-background-theme($crowd-u-app-theme);
+@include primary-dark-background-theme($crowd-u-app-theme);
+@include primary-border-theme($crowd-u-app-theme);
+@include primary-light-border-theme($crowd-u-app-theme);
+@include primary-dark-border-theme($crowd-u-app-theme);
+@include accent-background-theme($crowd-u-app-theme);
+@include accent-light-background-theme($crowd-u-app-theme);
+@include accent-dark-background-theme($crowd-u-app-theme);
+@include accent-border-theme($crowd-u-app-theme);
+@include accent-light-border-theme($crowd-u-app-theme);
+@include accent-dark-border-theme($crowd-u-app-theme);

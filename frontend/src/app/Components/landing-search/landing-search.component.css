@@ -1,0 +1,16 @@
+.search-main {
+    width: 30vw;
+    height: auto;
+    margin: 24px;
+    padding: 0px;
+}
+@media all and (max-width: 1000px) {
+    .search-main {
+        width: 50vw;
+    }
+}
+@media all and (max-width: 600px) {
+    .search-main {
+        width: 70vw;
+    }
+}

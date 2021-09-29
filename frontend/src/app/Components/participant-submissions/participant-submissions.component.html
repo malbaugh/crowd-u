@@ -1,0 +1,72 @@
+<div *ngIf="!dataLoaded1 && !dataLoaded2" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="(!loaded1 || !loaded2) && (dataLoaded1 && dataLoaded2)" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div *ngIf="dataLoaded1 && dataLoaded2" class="orient-contents-vertically search-form-main">
+  <mat-toolbar class="primary-light">
+    <mat-toolbar-row>
+      <div class="search-toolbar-info">Your Submissions & Applications</div>
+      <span class="horizontal-spacer"></span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-tab-group class="tab-container" (selectedTabChange)="TabChanged($event)">
+
+    <mat-tab label="Open">
+      <div *ngIf="loaded1" class="tab-content">
+        <mat-list *ngFor="let submission of pageOpenSubmissions" [class.selected]="submission === selectedSubmission" (click)="OnSeeSubmission(submission)">
+          <mat-card class="submission-search-card">
+            <div class="submission-search-image-container center-contents">
+              <img [src]="submission.Photo ? submission.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="submission-search-image primary-border">
+            </div>
+        
+            <div class="submission-search-information orient-contents-vertically">
+              <mat-card-title class="submission-search-title">{{submission.Name}}</mat-card-title>
+              <p class="submission-search-subtitle">{{submission.Description}}</p>
+        
+              <span class="submission-search-padding"></span>
+        
+              <mat-chip-list class="orient-contents-horizontally">
+                <mat-chip *ngIf="submission.TeamName" color="primary" selected>Team: {{submission.TeamName}}</mat-chip>
+                <mat-chip *ngIf="!submission.TeamName" color="primary" selected>Username: {{submission.Members[0]}}</mat-chip>
+                <mat-chip *ngIf="submission.WinnerType" color="primary" selected>{{submission.WinnerType}}</mat-chip>
+                <mat-chip color="primary" selected>{{SubmissionType(submission)}}</mat-chip>
+              </mat-chip-list>
+            </div>
+          </mat-card>
+        </mat-list>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Completed">
+      <div *ngIf="loaded2" class="tab-content">
+        <mat-list class="scroll" *ngFor="let submission of pageClosedSubmissions" [class.selected]="submission === selectedSubmission" (click)="OnSeeSubmission(submission)">
+          <mat-card class="submission-search-card">
+            <div class="submission-search-image-container center-contents">
+              <img [src]="submission.Photo ? submission.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="submission-search-image primary-border">
+            </div>
+        
+            <div class="submission-search-information orient-contents-vertically">
+              <mat-card-title class="submission-search-title">{{submission.Name}}</mat-card-title>
+              <p class="submission-search-subtitle">{{submission.Description}}</p>
+        
+              <span class="submission-search-padding"></span>
+        
+              <mat-chip-list class="orient-contents-horizontally">
+                <mat-chip *ngIf="submission.TeamName" color="primary" selected>Team: {{submission.TeamName}}</mat-chip>
+                <mat-chip *ngIf="!submission.TeamName" color="primary" selected>Username: {{submission.Members[0]}}</mat-chip>
+                <mat-chip *ngIf="submission.WinnerType" color="primary" selected>{{submission.WinnerType}}</mat-chip>
+                <mat-chip color="primary" selected>{{SubmissionType(submission)}}</mat-chip>
+              </mat-chip-list>
+            </div>
+          </mat-card>
+        </mat-list>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <span class="horizontal-spacer"></span>
+  <mat-paginator class="tab-paginator" *ngIf="currentTabIndex == 0" [pageIndex]="pageIndex1" [length]="allOpenSubmissions.length" [pageSize]="pageSize1" [pageSizeOptions]="pageSizeOptions" (page)="GetOpenSubmissions($event)"></mat-paginator>
+  <mat-paginator class="tab-paginator" *ngIf="currentTabIndex == 1" [pageIndex]="pageIndex2" [length]="allClosedSubmissions.length" [pageSize]="pageSize2" [pageSizeOptions]="pageSizeOptions" (page)="GetClosedSubmissions($event)"></mat-paginator>
+</div>

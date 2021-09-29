@@ -1,0 +1,89 @@
+<html class="landing-html" lang="en">
+  <mat-toolbar class="toolbar">
+    <mat-toolbar-row>
+      <img class="app-logo" src="https://crowd-u-public-assets.s3.amazonaws.com/logoDark.png">
+      <span class="horizontal-spacer"></span>
+      <button mat-button class="white-buttons" (click)="OnLogin()">Login</button>
+      <button mat-button class="white-buttons" (click)="OnRegister()">Register</button>
+
+      <button class="mobile-menu" [matMenuTriggerFor]="menu1" mat-button><mat-icon>menu</mat-icon></button>
+      <mat-menu #menu1="matMenu">
+        <button mat-button (click)="OnLogin()">Login</button>
+        <button mat-button (click)="OnRegister()">Register</button>
+      </mat-menu>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <body class="landing-body">
+    <div class="pimg1">
+      <div class="ptext">
+        <span class="border mobile-hide">
+          The Global University HUB
+        </span>
+        <span class="border mobile-display">
+          Crowd-U
+        </span>
+      </div>
+    </div>
+
+    <section class="section section-light">
+      <h2>How it Works</h2>
+      <p>
+        Competitions | Hackathons, Pitch Competitions, Design Competitions
+      </p>
+      <button mat-raised-button class="bottom-spacing" color="primary" (click)="OnSubmit()">See Our Contests</button>
+      
+      <div class="how-it-works space-between">
+        <div class="orient-contents-vertically left-justify-contents boxes">
+          <mat-icon class="icons" color="primary">search</mat-icon>
+          <div class="bold-text">Search for open competitions</div>
+          <p>Narrow in on contests that require your unique skillset</p>
+        </div>
+        <div class="orient-contents-vertically left-justify-contents boxes">
+          <mat-icon class="icons" color="primary">flag</mat-icon>
+          <div class="bold-text">Follow the contest</div>
+          <p>Build your team and prepare your submission</p>
+        </div>
+        <div class="orient-contents-vertically left-justify-contents boxes">
+          <mat-icon class="icons" color="primary">send</mat-icon>
+          <div class="bold-text">Enter the Contest</div>
+          <p>Compete and win cash prizes</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="pimg2">
+      <div class="ptext">
+        <span class="border trans mobile-hide">
+          Innovate Through the University Crowd
+        </span>
+        <span class="border trans mobile-display">
+          Innovate
+        </span>
+      </div>
+    </div>
+
+    <section class="section section-dark">
+      <h2>Tired of managing a Hackathon or Contest? Leave it to us.</h2>
+      <p>
+        Students and Alumni want to compete in contests and participate in hackathons just as much as you want them to. The biggest problem is connecting to the individuals interested in your specific event. Crowd-U instantly puts your contest on the map. We handle registration, verification, screen submissions, dispense prizes, and provide you an easy interface to select winners from.
+      </p>
+    </section>
+
+    <div class="pimg3">
+      <div class="ptext">
+        <span class="border trans">Learn More</span>
+      </div>
+    </div>
+
+    <section class="section section-dark">
+      <h2>Do you have questions or would you like to host your contest on Crowd-U?</h2>
+      <p>
+        Contact us at info@crowd-u.com
+      </p>
+    </section>
+    <section class="partner section-dark">
+      <h2>Need help studying? Check out our partner</h2>
+      <a href="https://tudrapp.com/"><img class="study-table" src="https://crowd-u-public-assets.s3.amazonaws.com/study-table.png"></a>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+<div *ngIf="!dataLoaded" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="dataLoaded" class="profile-form-main orient-contents-vertically">
+  <div class="profile-action-icons orient-contents-horizontally">
+    <div><a *ngIf="user.ChallengeOwnerProfileData.Website" href="{{user.ChallengeOwnerProfileData.Website}}"><button matTooltip="Go to this user's website." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">web</mat-icon></button></a></div>
+    <button (click)="OnSeeClosedChallenges()" matTooltip="See this user's closed challenges." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">event_busy</mat-icon></button>
+    <button (click)="OnSeeChallenges()" matTooltip="See this user's open challenges." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">event_available</mat-icon></button>
+    
+    <span class="horizontal-spacer"></span>
+    
+    <button *ngIf="loggedIn && !myProfile && !following" (click)="OnFollow()" matTooltip="Follow this user." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">turned_in_not</mat-icon></button>
+    <button *ngIf="loggedIn && !myProfile && following" (click)="OnUnfollow()" matTooltip="Unfollow this user." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">turned_in</mat-icon></button>
+    <button *ngIf="" (click)="OnSendMessage()" matTooltip="Send a message to this user." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">mail</mat-icon></button>
+    <button *ngIf="myProfile" (click)="OnCreateChallenge()" matTooltip="Create a new challenge." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">post_add</mat-icon></button>
+    <button *ngIf="myProfile && user.OrganizationLead" (click)="OnEdit()" matTooltip="Edit your header information." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">edit</mat-icon></button>
+  </div>
+  
+  <div class="profile-content">
+    <div class="profile-image-container center-contents">
+      <img [src]="user.ChallengeOwnerProfileData.Photo ? user.ChallengeOwnerProfileData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultProfilePicture.png'" class="profile-image primary-border">
+      <div (click)="file.click()" *ngIf="myProfile && user.OrganizationLead" class="profile-edit-photo"><button mat-mini-fab><mat-icon>edit</mat-icon></button></div>
+      <input id="imageInput" accept="image/*" type='file' (change)="EditProfileImage($event)" #file>
+    </div>
+
+    <div class="profile-information orient-contents-vertically">
+      <div class="orient-contents-horizontally profile-info-line">
+        <h2 class="profile-title">{{user.Department}}<span *ngIf="user.Department"> | </span>{{user.ChallengerRegistrationData.FirstName}} {{user.ChallengerRegistrationData.LastName}}</h2>
+        <div><a *ngIf="user.ChallengeOwnerProfileData.LinkedIn" href="{{user.ChallengeOwnerProfileData.LinkedIn}}"><img src="https://crowd-u-public-assets.s3.amazonaws.com/linkedin.png" class="profile-linkedin-logo"></a></div>
+        <span class="profile-padding"></span>
+      </div>
+
+      <p class="profile-subtitle profile-info-line">{{user.ChallengeOwnerProfileData.Description}}</p>
+
+      <div class="orient-contents-horizontally profile-info-line" *ngIf="user.ChallengeOwnerProfileData.City">
+        <mat-icon color="primary">place</mat-icon>
+        <p class="profile-subtitle">{{user.ChallengeOwnerProfileData.City}}, {{user.ChallengeOwnerProfileData.State}}</p>
+      </div>
+
+      <p class="profile-statistics profile-info-line">Following: {{followingCount}} | Followers: {{followerCount}}</p>
+      
+      <div *ngIf="" class="orient-contents-vertically profile-info-line profile-progress-bar">
+        <p>84% Job Satisfaction</p>
+        <mat-progress-bar  mode="determinate" value="84"></mat-progress-bar>
+      </div>
+
+      <span class="profile-padding"></span>
+
+      <mat-chip-list *ngIf="user.ChallengeOwnerProfileData.Industry" class="orient-contents-horizontally profile-chips">
+        <mat-chip color="primary" selected>{{user.ChallengeOwnerProfileData.Industry}}</mat-chip>
+      </mat-chip-list>
+    </div>
+
+    <span class="profile-padding"></span>
+  </div>
+
+  <div class="profile-about orient-contents-vertically">
+    <div class="orient-contents-horizontally center-contents profile-about-line">
+      <mat-card-title class="profile-title">About:</mat-card-title>
+      <span class="horizontal-spacer"></span>
+      <div><button *ngIf="myProfile && user.OrganizationLead" (click)="OnEditAbout()" mat-icon-button><mat-icon color="primary">edit</mat-icon></button></div>
+    </div>
+
+    <div class="about-content profile-about-line" [innerHtml]="user.ChallengeOwnerProfileData.About"></div>
+  </div>  
+</div>

@@ -1,0 +1,30 @@
+<div class="popup-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">REGISTER</div>
+    <span class="horizontal-spacer"></span>
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <div>
+    <div class="popup-form-content orient-contents-vertically-dialog">
+      <mat-card-title>JOIN THE CROWD</mat-card-title>
+      <mat-card-subtitle class="divider">
+        Join Crowd-U to help solve challenging problems, gain meaningful industry experience, and receive competitive pay.
+      </mat-card-subtitle>
+      <button mat-raised-button (click)="OnRegister()" color="primary" routerLink="/participant-registration">Participant Registration</button>
+    </div>
+  </div>
+  
+  <mat-divider></mat-divider>
+  <div class="popup-form-footer">
+    <div class="popup-form-content orient-contents-vertically-dialog">
+      <mat-card-title>HARNESS THE CROWD</mat-card-title>
+      <mat-card-subtitle class="divider">
+          Harness Crowd-U's curated academic talent to solve abstract, technical and creative challenges which require the innovative and cutting-edge approaches, processes and technologies only found in academia. 
+      </mat-card-subtitle>
+      <button mat-raised-button (click)="OnRegister()" color="primary" routerLink="/challenger-registration">Organization Registration</button>
+    </div>
+  </div>
+</div>

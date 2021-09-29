@@ -1,0 +1,99 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">CREATE A DEPARTMENT</div>
+    <span class="horizontal-spacer"></span>
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <form class="orient-contents-vertically-dialog popup-form-content" [formGroup]="departmentCreateForm" (ngSubmit)="OnCreateDepartment()">
+    <mat-form-field appearance="outline" >
+      <mat-label>Name of the Department</mat-label>
+      <input matInput placeholder="Department" type="text" formControlName="name" />
+      <mat-error *ngIf="(name.dirty || name.touched) && name.invalid && name.errors.required">You must enter a name for your department.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" >
+      <mat-label>Create a Username for the Department</mat-label>
+      <input matInput placeholder="Username" type="text" formControlName="username" />
+      <mat-error *ngIf="(username.dirty || username.touched) && username.invalid && username.errors.required">Username is required.</mat-error>
+    </mat-form-field>
+
+    <mat-divider></mat-divider>
+    
+    <p>Note: Your department lead will be able to change the information below later.</p>
+
+    <mat-form-field appearance="outline" >
+      <mat-label>Enter Your Department Lead's Email</mat-label>
+      <input matInput placeholder="Email" type="email" formControlName="email" required/>
+      <mat-error *ngIf="(email.dirty || email.touched) && email.invalid && email.errors.required">Email is required.</mat-error>
+      <mat-error *ngIf="(email.dirty || email.touched) && email.invalid && email.errors.email">Enter a valid email address.</mat-error>
+    </mat-form-field>
+
+    <div class="orient-contents-vertically-dialog" formGroupName="password">
+      <mat-form-field appearance="outline" >
+        <mat-label>Create a Pasword</mat-label>
+        <input matInput matTooltip="Passwords must have a minimum eight characters, one upper case letter, one lower case letter, one number and one special character." placeholder="Password" type="password" formControlName="password1" [type]="hide ? 'password' : 'text'" />
+        <mat-error *ngIf="(password1.dirty || password1.touched) && password1.invalid && password1.errors.required">Password is required.</mat-error>
+        <mat-error *ngIf="(password1.dirty || password1.touched) && password1.invalid && password1.errors.pattern">Password isn't strong enough.</mat-error>
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>Confirm Your Password</mat-label>
+        <input matInput placeholder="Confirm Password" type="password" formControlName="password2" [type]="hide2 ? 'password' : 'text'" />
+        <mat-error *ngIf="(password2.dirty || password2.touched) && password2.invalid && password2.errors.required">Confirm Password is required.</mat-error>
+        <mat-icon matSuffix (click)="hide2 = !hide2">{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </mat-form-field>
+
+      <mat-error *ngIf="password.errors?.doesMatchPassword">The passwords must match.</mat-error>
+    </div>
+
+    <mat-label class="stepper-form-label">Provide a Point of Contact (POC) for the Department</mat-label>
+
+    <mat-form-field appearance="outline" >
+      <mat-label>POC First Name</mat-label>
+      <input matInput placeholder="POC First Name" type="text" formControlName="pocNameFirst"/>
+      <mat-error *ngIf="(pocNameFirst.dirty || pocNameFirst.touched) && pocNameFirst.invalid && pocNameFirst.errors.required">POC First Name is required.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" >
+      <mat-label>POC Last Name</mat-label>
+      <input matInput placeholder="POC Full Name" type="text" formControlName="pocNameLast"/>
+      <mat-error *ngIf="(pocNameLast.dirty || pocNameLast.touched) && pocNameLast.invalid && pocNameLast.errors.required">POC Last Name is required.</mat-error>
+    </mat-form-field>
+
+    <mat-label class="stepper-form-label">POC Phone Number</mat-label>
+
+    <div class="orient-contents-horizontally-dialog-dialog" formGroupName="cellPhone" class="flex-container">
+      <mat-form-field appearance="outline" class="popup-form-cellphone-country">
+        <input matInput style="text-align:center" placeholder="1" maxlength="2" type="number" formControlName="country"/>
+        <mat-error *ngIf="(country.dirty || country.touched) && country.invalid && country.errors.required">required.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="popup-form-cellphone">
+        <input matInput style="text-align:center" placeholder="000" maxlength="3" type="number" formControlName="area"/>
+        <mat-error *ngIf="(area.dirty || area.touched) && area.invalid && area.errors.required">required.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="popup-form-cellphone">
+        <input matInput style="text-align:center" placeholder="000" maxlength="3" type="number" formControlName="prefix"/>
+        <mat-error *ngIf="(prefix.dirty || prefix.touched) && prefix.invalid && prefix.errors.required">required.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="popup-form-cellphone">
+        <input matInput style="text-align:center" placeholder="0000" maxlength="4" type="number" formControlName="line"/>
+        <mat-error *ngIf="(line.dirty || line.touched) && line.invalid && line.errors.required">required.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="orient-contents-horizontally-dialog">
+      <span class="horizontal-spacer"></span>
+      <span class="horizontal-spacer"></span>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!departmentCreateForm.valid">Create Department</button>
+    </div>
+  </form>
+</div>

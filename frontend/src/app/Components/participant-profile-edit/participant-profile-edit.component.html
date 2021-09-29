@@ -1,0 +1,140 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">EDIT INFO</div>
+    <span class="horizontal-spacer"></span>
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <form class="orient-contents-vertically-dialog popup-form-content" [formGroup]="headerForm" (ngSubmit)="OnSubmitHeader()">
+    <mat-label class="form-label">Full Name</mat-label>
+    <div class="orient-contents-horizontally-dialog space-between-dialog">
+      <mat-form-field class="edit-data-left" appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input matInput placeholder="FirstName" type="text" formControlName="firstName"/>
+        <mat-error *ngIf="(firstName.dirty || firstName.touched) && firstName.invalid && firstName.errors.required">First Name is required.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="edit-data-right" appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input matInput placeholder="Last Name" type="text" formControlName="lastName"/>
+        <mat-error *ngIf="(lastName.dirty || lastName.touched) && lastName.invalid && lastName.errors.required">Last Name is required.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-label class="form-label">Academic Information</mat-label>
+    <mat-form-field *ngIf="dataLoaded" appearance="outline" >
+      <mat-label>Major</mat-label>
+      <input matInput placeholder="Major" type="text" formControlName="major" [matAutocomplete]="autoGroup"/>
+      <mat-autocomplete #autoGroup="matAutocomplete">
+        <mat-option *ngFor="let major of majorGroupOptions | async" [value]="major">
+          {{ major }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="dataLoaded" appearance="outline" >
+      <mat-label>University</mat-label>
+      <input matInput placeholder="University" type="text" formControlName="university" [matAutocomplete]="autoGroup2"/>
+      <mat-error *ngIf="(university.dirty || university.touched) && university.invalid && university.errors.required">University is required.</mat-error>
+      <mat-autocomplete #autoGroup2="matAutocomplete">
+        <mat-option *ngFor="let university of universityGroupOptions | async" [value]="university">
+          {{ university }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" >
+      <mat-label>Education Status</mat-label>
+      <mat-select type="text" formControlName="educationStatus">
+        <mat-option *ngFor="let i of edStatuses" [value]="i.name">
+          {{ i.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-label class="form-label">Current Address</mat-label>
+    <div class="orient-contents-vertically-dialog" formGroupName="location">
+      <mat-form-field appearance="outline" >
+        <mat-label>Address</mat-label>
+        <textarea matInput formControlName="addressOne" type="text" placeholder="Address"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>Address 2</mat-label>
+        <textarea matInput formControlName="addressTwo" type="text" placeholder="Address 2"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>City</mat-label>
+        <input matInput formControlName="city" type="text" placeholder="City">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>State</mat-label>
+        <input type="text" matInput placeholder="State" formControlName="state" [matAutocomplete]="autoGroup3">
+        <mat-autocomplete #autoGroup3="matAutocomplete">
+          <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.parent">
+            <mat-option *ngFor="let name of group.name" [value]="name">
+              {{ name }}
+            </mat-option>
+          </mat-optgroup>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>Postal Code</mat-label>
+        <input matInput #postalCode maxlength="5" type="number" formControlName="postalCode" placeholder="Postal Code">
+        <mat-hint align="end">{{ postalCode.value.length }} / 5</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <mat-label class="form-label">Top Three Skillsets</mat-label>
+    <div *ngIf="dataLoaded" class="orient-contents-vertically-dialog" formGroupName="concentration">
+      <mat-form-field appearance="outline" >
+        <mat-label>Concentration 1</mat-label>
+        <input matInput placeholder="Concentration" type="text" formControlName="concentrationOne" [matAutocomplete]="autoGroup4"/>
+        <mat-autocomplete #autoGroup4="matAutocomplete">
+          <mat-option *ngFor="let concentration of concentrationGroupOptions1 | async" [value]="concentration">
+            {{ concentration }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>Concentration 2</mat-label>
+        <input matInput placeholder="Concentration" type="text" formControlName="concentrationTwo" [matAutocomplete]="autoGroup5"/>
+        <mat-autocomplete #autoGroup5="matAutocomplete">
+          <mat-option *ngFor="let concentration of concentrationGroupOptions2 | async" [value]="concentration">
+            {{ concentration }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>Concentration 3</mat-label>
+        <input matInput placeholder="Concentration" type="text" formControlName="concentrationThree" [matAutocomplete]="autoGroup6"/>
+        <mat-autocomplete #autoGroup6="matAutocomplete">
+          <mat-option *ngFor="let concentration of concentrationGroupOptions3 | async" [value]="concentration">
+            {{ concentration }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <mat-label class="form-label">Social Media</mat-label>
+    <mat-form-field appearance="outline" >
+      <mat-label>LinkedIn</mat-label>
+      <input matInput placeholder="LinkedIn" type="text" formControlName="linkedIn"/>
+    </mat-form-field>
+    
+    <div class="orient-contents-horizontally-dialog">
+      <span class="horizontal-spacer"></span>
+      <span class="horizontal-spacer"></span>
+      <button mat-raised-button color="primary" [disabled]="!headerForm.valid" type="submit" >Save</button>
+    </div>
+  </form>
+</div>

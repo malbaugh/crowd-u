@@ -1,0 +1,191 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">Challenge Creation</div>
+
+    <span class="horizontal-spacer"></span>
+
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <mat-tab-group #tabs mat-stretch-tabs>
+    <mat-tab label="Contest">
+      <div class="popup-form-tab-content">
+        <div class="divider">Note: this data can be changed later after the form has been submitted.</div>
+        <form class="orient-contents-vertically-dialog" [formGroup]="contestCreateForm" (ngSubmit)="OnSubmitContest($event)">
+          <mat-form-field appearance="outline">
+            <mat-label>Name of Contest</mat-label>
+            <input matInput placeholder="Name" formControlName="name" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Prize Amount</mat-label>
+            <input matInput placeholder="Prize Amount" formControlName="prize" type="number" />
+          </mat-form-field>
+
+          <div *ngIf="dataLoaded" class="orient-contents-vertically-dialog" formGroupName="concentration">
+            <mat-form-field appearance="outline" >
+              <mat-label>Concentration 1</mat-label>
+              <input matInput placeholder="Concentration" type="text" formControlName="concentrationOne" [matAutocomplete]="autoGroup1"/>
+              <mat-autocomplete #autoGroup1="matAutocomplete">
+                <mat-option *ngFor="let concentration of concentrationGroupOptions1 | async" [value]="concentration">
+                  {{ concentration }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" >
+              <mat-label>Concentration 2 (optional)</mat-label>
+              <input matInput placeholder="Concentration" type="text" formControlName="concentrationTwo" [matAutocomplete]="autoGroup2"/>
+              <mat-autocomplete #autoGroup2="matAutocomplete">
+                <mat-option *ngFor="let concentration of concentrationGroupOptions2 | async" [value]="concentration">
+                  {{ concentration }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" >
+              <mat-label>Concentration 3 (optional)</mat-label>
+              <input matInput placeholder="Concentration" type="text" formControlName="concentrationThree" [matAutocomplete]="autoGroup3"/>
+              <mat-autocomplete #autoGroup3="matAutocomplete">
+                <mat-option *ngFor="let concentration of concentrationGroupOptions3 | async" [value]="concentration">
+                  {{ concentration }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+
+          <div class="divider">Note: once you create this contest you will be able to provide a longer description and more details on rules, eligibility, etc.</div>
+
+          <mat-form-field appearance="outline" >
+            <mat-label>Short Description</mat-label>
+            <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5" placeholder="Description" maxlength="200" type="text" formControlName="description"></textarea>
+            <mat-hint align="end">{{contestCreateForm.controls['description'].value?.length || 0}}/200</mat-hint>
+            <button mat-button *ngIf="contestCreateForm.controls['description'].dirty" matSuffix mat-icon-button aria-label="Clear" (click)="contestCreateForm.controls['description'].reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Challenge Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" placeholder="Start Date"
+              formControlName="startDate">
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Challenge End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" placeholder="End Date" formControlName="endDate">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-checkbox class="form-label divider" matInput formControlName="isConfidential"
+            matTooltip="Check if your project will have confidential information associated with it">Confidential
+          </mat-checkbox>
+
+          <mat-checkbox class="form-label divider" [(ngModel)]="limitUsers" [ngModelOptions]="{standalone: true}" matTooltip="Check if you want to set a limit to how many people can register for your contest">Limit Registration</mat-checkbox>
+
+          <mat-form-field *ngIf="limitUsers" appearance="outline">
+            <mat-label>Registration Limit</mat-label>
+            <input matInput placeholder="Registration Limit" formControlName="userLimit" type="number" min="0"/>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit"
+            [disabled]="!contestCreateForm.valid">Create</button>
+        </form>
+      </div>
+    </mat-tab>
+    <mat-tab label="Contract">
+      <div class="popup-form-tab-content">
+        <div class="divider">Note: this data can be changed later after the form has been submitted.</div>
+        <form class="orient-contents-vertically-dialog" [formGroup]="contractCreateForm" (ngSubmit)="OnSubmitContract($event)">
+          <mat-form-field appearance="outline">
+            <mat-label>Name of Contract</mat-label>
+            <input matInput placeholder="Name" formControlName="name" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Prize Amount</mat-label>
+            <input matInput placeholder="Prize Amount" formControlName="prize" type="number" />
+          </mat-form-field>
+
+          <div *ngIf="dataLoaded" class="orient-contents-vertically-dialog" formGroupName="concentration">
+            <mat-form-field appearance="outline" >
+              <mat-label>Concentration 1</mat-label>
+              <input matInput placeholder="Concentration" type="text" formControlName="concentrationOne" [matAutocomplete]="autoGroup4"/>
+              <mat-autocomplete #autoGroup4="matAutocomplete">
+                <mat-option *ngFor="let concentration of concentrationGroupOptions4 | async" [value]="concentration">
+                  {{ concentration }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" >
+              <mat-label>Concentration 2 (optional)</mat-label>
+              <input matInput placeholder="Concentration" type="text" formControlName="concentrationTwo" [matAutocomplete]="autoGroup5"/>
+              <mat-autocomplete #autoGroup5="matAutocomplete">
+                <mat-option *ngFor="let concentration of concentrationGroupOptions5 | async" [value]="concentration">
+                  {{ concentration }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" >
+              <mat-label>Concentration 3 (optional)</mat-label>
+              <input matInput placeholder="Concentration" type="text" formControlName="concentrationThree" [matAutocomplete]="autoGroup6"/>
+              <mat-autocomplete #autoGroup6="matAutocomplete">
+                <mat-option *ngFor="let concentration of concentrationGroupOptions6 | async" [value]="concentration">
+                  {{ concentration }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+          
+          <div class="divider">Note: once you create this contract you will be able to provide a longer description and more details on rules, eligibility, etc.</div>
+
+          <mat-form-field appearance="outline" >
+            <mat-label>Short Description</mat-label>
+            <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5" placeholder="Description" maxlength="200" type="text" formControlName="description"></textarea>
+            <mat-hint align="end">{{contractCreateForm.controls['description'].value?.length || 0}}/200</mat-hint>
+            <button mat-button *ngIf="contractCreateForm.controls['description'].dirty" matSuffix mat-icon-button aria-label="Clear" (click)="contractCreateForm.controls['description'].reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Challenge Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker2" placeholder="Start Date" formControlName="startDate">
+            <mat-datepicker-toggle matSuffix [for]="startPicker2"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker2></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Challenge End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker2" placeholder="End Date" formControlName="endDate">
+            <mat-datepicker-toggle matSuffix [for]="endPicker2"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker2></mat-datepicker>
+          </mat-form-field>
+
+          <mat-checkbox class="form-label divider" matInput formControlName="isConfidential"
+            matTooltip="Check if your project will have confidential information associated with it">Confidential
+          </mat-checkbox>
+
+          <mat-checkbox class="form-label divider" [(ngModel)]="limitUsers" [ngModelOptions]="{standalone: true}" matTooltip="Check if you want to set a limit to how many people can apply for your contract">Limit Applicants</mat-checkbox>
+
+          <mat-form-field *ngIf="limitUsers" appearance="outline">
+            <mat-label>Application Limit</mat-label>
+            <input matInput placeholder="Application Limit" formControlName="userLimit" type="number" min="0"/>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit"
+            [disabled]="!contractCreateForm.valid">Create</button>
+        </form>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

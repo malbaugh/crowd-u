@@ -1,0 +1,29 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">Award This Submission</div>
+
+    <span class="horizontal-spacer"></span>
+
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <form class="orient-contents-vertically-dialog popup-form-content" [formGroup]="winnerForm" (ngSubmit)="OnSubmitWinner()">
+    <p>Note: you must finalize your winner selections to make this permanent. Select "None" to remove an award from a submission.</p>
+    <mat-form-field appearance="outline" >
+      <mat-label>Award this submission</mat-label>
+      <input matInput placeholder="Award" type="text" formControlName="award" [matAutocomplete]="autoGroup"/>
+      <mat-autocomplete #autoGroup="matAutocomplete">
+        <mat-option>None</mat-option>
+        <mat-option *ngFor="let option of awardGroupOptions | async" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="!winnerForm.valid">Submit</button>
+  </form>
+</div>

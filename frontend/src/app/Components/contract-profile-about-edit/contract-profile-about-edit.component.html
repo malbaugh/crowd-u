@@ -1,0 +1,110 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-edit-about-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">EDIT INFO</div>
+    <span class="horizontal-spacer"></span>
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <div class="popup-form-tab-content">
+    <form class="orient-contents-vertically-dialog" [formGroup]="form" (ngSubmit)="OnSubmit()">
+      <mat-tab-group #tabs mat-stretch-tabs>
+        <mat-tab label="Description"> 
+          <div class="orient-contents-vertically-dialog">
+            <p>Provide additional details about your contract.</p>
+
+            <quill-editor class="divider" formControlName="about"></quill-editor>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Compensation"> 
+          <div class="orient-contents-vertically-dialog">
+            <p>Provide more details about the compensation you are offering for your contract.</p>
+            
+            <quill-editor class="divider" formControlName="prizes"></quill-editor>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Eligibility"> 
+          <div class="orient-contents-vertically-dialog">
+            <p>If you have eligibility requirements, describe them here.</p>
+            
+            <quill-editor class="divider" formControlName="eligibility"></quill-editor>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Rules"> 
+          <div class="orient-contents-vertically-dialog">
+            <p>Describe the rules of your contract.</p>
+            
+            <quill-editor class="divider" formControlName="rules"></quill-editor>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Requirements"> 
+          <div class="orient-contents-vertically-dialog">
+            <p>Describe any requirements of the contract.</p>
+            
+            <quill-editor class="divider" formControlName="requirements"></quill-editor>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Selection Criteria"> 
+          <div class="orient-contents-vertically-dialog">
+            <p>Provide the selection criteria for your contract.</p>
+            
+            <quill-editor class="divider" formControlName="criteria"></quill-editor>
+          </div>
+        </mat-tab>
+
+        <!-- <mat-tab label="Judges"> 
+          <div class="orient-contents-vertically-dialog">
+            <p>Tell us about the judges of this contract.</p>
+            
+            <mat-form-field appearance="outline" >
+              <mat-label>Judges</mat-label>
+              <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="20" placeholder="Judges" maxlength="4000" type="text" formControlName="judges"></textarea>
+              <mat-hint align="end">{{judges.value?.length || 0}}/4000</mat-hint>
+              <button mat-button *ngIf="judges.dirty" matSuffix mat-icon-button aria-label="Clear" (click)="judges.reset()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Sponsors"> 
+          <div class="orient-contents-vertically-dialog">
+            <p>List any sponsors you have for this contract.</p>
+            
+            <mat-form-field appearance="outline" >
+              <mat-label>Sponsors</mat-label>
+              <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="20" placeholder="Sponsors" maxlength="4000" type="text" formControlName="sponsors"></textarea>
+              <mat-hint align="end">{{sponsors.value?.length || 0}}/4000</mat-hint>
+              <button mat-button *ngIf="sponsors.dirty" matSuffix mat-icon-button aria-label="Clear" (click)="sponsors.reset()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </mat-tab> -->
+
+        <mat-tab label="Resources"> 
+          <div class="orient-contents-vertically-dialog">
+            <p>Provide resources for the applicatants of this contract to refer to when constructing their application.</p>
+            
+            <quill-editor class="divider" formControlName="resources"></quill-editor>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    
+    
+      <div class="orient-contents-horizontally-dialog">
+        <span class="horizontal-spacer"></span>
+        <span class="horizontal-spacer"></span>
+        <button color="primary" type="submit" [disabled]="!form.valid" mat-raised-button>Save</button>
+      </div>
+    </form>
+  </div>
+</div>

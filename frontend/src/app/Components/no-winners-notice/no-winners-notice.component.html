@@ -1,0 +1,20 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">No Winners</div>
+    <span class="horizontal-spacer"></span>
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <div class="orient-contents-vertically-dialog popup-form-content">
+    <mat-label class="divider">Unfortunately, it looks like no one submitted to this opportunity. You will be refunded and contacted by our representatives to see how we can better market your particular challenge.</mat-label>
+    
+    <div class="orient-contents-horizontally-dialog">
+      <span class="horizontal-spacer"></span>
+      <button (click)="OnDelete()" color="warn" mat-raised-button>UNDERSTOOD</button>
+    </div>
+  </div>
+</div>

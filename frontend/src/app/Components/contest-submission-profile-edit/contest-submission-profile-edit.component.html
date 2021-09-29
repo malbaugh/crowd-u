@@ -1,0 +1,40 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-edit-about-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">EDIT SUBMISSION</div>
+
+    <span class="horizontal-spacer"></span>
+
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <form class="orient-contents-vertically-dialog popup-form-content" [formGroup]="form" (ngSubmit)="OnSubmit()">
+    <mat-label class="form-label">Submission Information</mat-label>
+  
+    <mat-form-field appearance="outline">
+      <mat-label>Name of Submission</mat-label>
+      <input matInput placeholder="Name" formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" >
+      <mat-label>Short Description</mat-label>
+      <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5" placeholder="Description" maxlength="200" type="text" formControlName="description"></textarea>
+      <mat-hint align="end">{{description.value?.length || 0}}/200</mat-hint>
+      <button mat-button *ngIf="description.dirty" matSuffix mat-icon-button aria-label="Clear" (click)="description.reset()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  
+    <mat-label>Describe Your Submission</mat-label>
+    <quill-editor class="divider" formControlName="about"></quill-editor>
+
+    <div class="orient-contents-horizontally-dialog">
+      <span class="horizontal-spacer"></span>
+      <span class="horizontal-spacer"></span>
+      <button  color="primary" type="submit" mat-raised-button>Save</button>
+    </div>
+  </form>
+</div>

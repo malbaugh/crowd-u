@@ -1,0 +1,27 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">SUBMIT AS:</div>
+    <span class="horizontal-spacer"></span>
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <div class="orient-contents-vertically-dialog popup-form-content">
+    <p>Note: If you are submitting to this challenge for a team, select the team's name below. If you are submitting as an individual, select "Individually".</p>
+
+    <mat-radio-group class="orient-contents-vertically-dialog popup-radio-group" [(ngModel)]="type">
+      <mat-radio-button class="popup-radio-button" *ngFor="let option of options" [value]="option">
+        {{ option }}
+      </mat-radio-button>
+    </mat-radio-group>
+    
+    <div class="orient-contents-horizontally-dialog">
+      <span class="horizontal-spacer"></span>
+      <span class="horizontal-spacer"></span>
+      <button mat-raised-button (click)="OnSubmit()" color="primary">Submit</button>
+    </div>
+  </div>
+</div>

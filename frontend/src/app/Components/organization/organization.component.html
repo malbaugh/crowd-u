@@ -1,0 +1,68 @@
+<div *ngIf="!dataLoaded" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="dataLoaded" class="organization-form-main orient-contents-vertically">
+  <div class="organization-content">
+    <div class="organization-image-container center-contents">
+      <img [src]="user.ChallengeOwnerProfileData.Photo ? user.ChallengeOwnerProfileData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultProfilePicture.png'" class="organization-image primary-border">
+    </div>
+
+    <div class="organization-information orient-contents-vertically">
+      <h2 class="organization-title">{{user.ChallengerRegistrationData.FirstName}} {{user.ChallengerRegistrationData.LastName}}</h2>
+      <p class="organization-subtitle">{{user.ChallengeOwnerProfileData.Description}}</p>
+
+      <span class="organization-padding"></span>
+
+      <mat-chip-list *ngIf="user.ChallengeOwnerProfileData.Industry" class="orient-contents-horizontally">
+        <mat-chip color="primary" selected>{{user.ChallengeOwnerProfileData.Industry}}</mat-chip>
+      </mat-chip-list>
+    </div>
+    <span class="horizontal-spacer"></span>
+  </div>
+  
+  <div *ngIf="departments.length != 0" class="orient-contents-vertically organization-department">
+    <div class="orient-contents-horizontally center-contents">
+      <mat-card-title class="organization-title">Departments:</mat-card-title>
+      <span class="horizontal-spacer"></span>
+      <button *ngIf="user.OrganizationLead" (click)="OnCreateDepartment()" matTooltip="Create a department." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">add</mat-icon></button>
+    </div>
+
+    <mat-list *ngFor="let department of departments">
+      <mat-card class="organization-profile-card">
+        <div class="organization-profile-content">
+          <h3 class="organization-title organization-about-line">{{department.Department}}</h3>
+          <p *ngIf="user.OrganizationLead" class="organization-subtitle">Manager: {{department.ChallengerRegistrationData.PocFirstName}} {{department.ChallengerRegistrationData.PocLastName}}</p>
+          <p *ngIf="user.OrganizationLead" class="organization-subtitle">Email: {{department.ChallengerRegistrationData.Email}}</p>
+          <p *ngIf="user.OrganizationLead" class="organization-subtitle">Phone: {{department.ChallengerRegistrationData.PocPhone}}</p>
+        </div>
+
+        <span class="horizontal-spacer"></span>
+        <button *ngIf="user.OrganizationLead" (click)="OnSeeDepartmentPerformance(department)" disabled="true" matTooltip="See this department's past performance." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">timeline</mat-icon></button>
+        <button (click)="OnSeeDepartmentOpenChallenges(department)" matTooltip="See this department's open challenges." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">school</mat-icon></button>
+        <button (click)="OnSeeDepartmentProfile(department)" class="organization-button-spacing" matTooltip="See this department's profile." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">person</mat-icon></button>
+        
+        <button *ngIf="user.OrganizationLead" (click)="OnEditDepartment(department)" matTooltip="Edit this department." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">edit</mat-icon></button>
+        <button *ngIf="user.OrganizationLead" (click)="OnDeleteDepartment(department)" matTooltip="Delete this department." matTooltipPosition="above" mat-icon-button><mat-icon color="warn">close</mat-icon></button>
+      </mat-card>
+    </mat-list>
+  </div>
+
+  <div *ngIf="departments.length == 0 && user.OrganizationLead"class="orient-contents-vertically organization-department">
+    <mat-card-title class="organization-title organization-about-line">Departments:</mat-card-title>
+
+    <div class="organization-about-line">
+      We help your organization manage multiple departments with our Organization Management console. To create sub-accounts for your department leaders, simply click the Create Department below.
+    </div>
+    
+    <div class="organization-about-line">
+      With this feature, each department can utilize their own credentials to create new challenges. You can monitor spending and the performance of each department from this account.
+    </div>
+
+    <div class="orient-contents-horizontally">
+      <span class="horizontal-spacer"></span>
+      <button color="primary" (click)="OnCreateDepartment()" mat-raised-button>Create Department</button>
+      <span class="horizontal-spacer"></span>
+    </div>
+  </div>
+</div>

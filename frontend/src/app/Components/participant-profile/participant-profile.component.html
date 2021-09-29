@@ -1,0 +1,100 @@
+<div *ngIf="!dataLoaded" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="!loaded && dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div *ngIf="dataLoaded" class="profile-form-main orient-contents-vertically">
+  <div class="profile-action-icons orient-contents-horizontally">
+    <div><a *ngIf="user.ParticipantProfileData.Website" href="{{user.ParticipantProfileData.Website}}"><button matTooltip="Go to this user's website." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">web</mat-icon></button></a></div>
+    
+    <span class="horizontal-spacer"></span>
+
+    <button *ngIf="loggedIn && !myProfile && !following" (click)="OnFollow()" matTooltip="Follow this user." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">turned_in_not</mat-icon></button>
+    <button *ngIf="loggedIn && !myProfile && following" (click)="OnUnfollow()" matTooltip="Unfollow this user." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">turned_in</mat-icon></button>
+    <button *ngIf="" (click)="OnSendMessage()" matTooltip="Send a message to this user." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">mail</mat-icon></button>
+    <button *ngIf="myProfile" (click)="OnEdit()" matTooltip="Edit your header information." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">edit</mat-icon></button>
+  </div>
+
+  <div class="profile-content">
+    <div class="profile-image-container center-contents">
+      <img [src]="user.ParticipantProfileData.Photo ? user.ParticipantProfileData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultProfilePicture.png'" class="profile-image primary-border">
+      <div (click)="file.click()" *ngIf="myProfile" class="profile-edit-photo"><button mat-mini-fab><mat-icon>edit</mat-icon></button></div>
+      <input id="imageInput" accept="image/*" type='file' (change)="EditProfileImage($event)" #file>
+    </div>
+
+    <div class="profile-information orient-contents-vertically">
+      <div class="orient-contents-horizontally profile-info-line">
+        <h2 class="profile-title">{{user.ParticipantRegistrationData.FirstName}} {{user.ParticipantRegistrationData.LastName}}</h2>
+        <div><a *ngIf="user.ParticipantProfileData.LinkedIn" href="{{user.ParticipantProfileData.LinkedIn}}"><img src="https://crowd-u-public-assets.s3.amazonaws.com/linkedin.png" class="profile-linkedin-logo"></a></div>
+        <span class="profile-padding"></span>
+      </div>
+
+      <p class="profile-subtitle profile-info-line">{{description}}</p>
+      
+      <div class="orient-contents-horizontally profile-info-line" *ngIf="user.ParticipantProfileData.City">
+        <mat-icon color="primary">place</mat-icon>
+        <p class="profile-subtitle">{{user.ParticipantProfileData.City}}<span *ngIf="user.ParticipantProfileData.State">, </span>{{user.ParticipantProfileData.State}}</p>
+      </div>
+
+      <p class="profile-statistics profile-info-line">Following: {{followingCount}} | Followers: {{followerCount}}</p>
+      
+      <div *ngIf="" class="orient-contents-vertically profile-info-line">
+        <div>96% Job Success</div>
+        <mat-progress-bar class="profile-progress-bar" mode="determinate" value="96"></mat-progress-bar>
+      </div>
+
+      <span class="profile-padding"></span>
+      <mat-chip-list class="orient-contents-horizontally profile-chips">
+        <mat-chip color="primary" *ngIf="user.ParticipantProfileData.Concentration[0]" selected>{{user.ParticipantProfileData.Concentration[0]}}</mat-chip>
+        <mat-chip color="primary" *ngIf="user.ParticipantProfileData.Concentration[1]" selected>{{user.ParticipantProfileData.Concentration[1]}}</mat-chip>
+        <mat-chip color="primary" *ngIf="user.ParticipantProfileData.Concentration[2]" selected>{{user.ParticipantProfileData.Concentration[2]}}</mat-chip>
+      </mat-chip-list>
+    </div>
+    <span class="profile-padding"></span>
+  </div>
+
+  <div class="profile-about orient-contents-vertically">
+    <div class="orient-contents-horizontally center-contents profile-about-line">
+      <mat-card-title class="profile-title">Information:</mat-card-title>
+      <span class="horizontal-spacer"></span>
+      <div *ngIf="myProfile"><button (click)="OnEditAbout()" mat-icon-button><mat-icon color="primary">edit</mat-icon></button></div>
+    </div>
+
+    <mat-tab-group [color]="'primary'" [backgroundColor]="'accent'" class="profile-tabs">      
+      <mat-tab label="Description" *ngIf="user.ParticipantProfileData.About || user.ParticipantProfileData.Description">
+        <div class="profile-about-line">{{user.ParticipantProfileData.Description}}</div>
+        <div class="profile-about-line" [innerHtml]="user.ParticipantProfileData.About"></div>
+      </mat-tab>
+      <mat-tab label="Submissions" *ngIf="allClosedSubmissions.length > 0">
+        <div>
+          <mat-list *ngFor="let submission of allClosedSubmissions" [class.selected]="submission === selectedSubmission">
+            <mat-card class="winner-selection-card">
+              <div class="winner-selection-image-container center-contents">
+                <img [src]="submission.Photo ? submission.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="winner-selection-image primary-border">
+              </div>
+          
+              <div class="winner-selection-information orient-contents-vertically">
+                <h2 class="winner-selection-title">{{submission.Name}}</h2>
+                <p class="winner-selection-subtitle">{{submission.Description}}</p>
+            
+                <span class="winner-selection-padding"></span>
+            
+                <mat-chip-list class="orient-contents-horizontally">
+                  <mat-chip *ngIf="submission.TeamName" color="primary" selected>Team: {{submission.TeamName}}</mat-chip>
+                  <mat-chip *ngIf="submission.WinnerType" color="primary" selected>{{submission.WinnerType}}</mat-chip>
+                </mat-chip-list>
+              </div>
+              <span class="horizontal-spacer"></span>
+
+              <div class="orient-contents-horizontally center-contents">
+                <span class="horizontal-spacer"></span>
+                <div><button (click)="OnSeeSubmission(submission)" matTooltip="See this submission's profile." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">insert_drive_file</mat-icon></button></div>
+              </div>
+            </mat-card>
+          </mat-list>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>   
+</div>

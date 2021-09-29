@@ -1,0 +1,89 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">EDIT INFO</div>
+    <span class="horizontal-spacer"></span>
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <form class="orient-contents-vertically-dialog popup-form-content" [formGroup]="headerForm" (ngSubmit)="OnSubmitHeader()">
+    <mat-label class="form-label">Organization Information</mat-label>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Organization's Name</mat-label>
+      <input matInput placeholder="Organization Name" type="text" formControlName="company"/>
+      <mat-error *ngIf="(company.dirty || company.touched) && company.invalid && company.errors.required">You must enter a name for your organization.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" >
+      <mat-label>Short Description About Your Organization</mat-label>
+      <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5" placeholder="Description" maxlength="150" type="text" formControlName="description"></textarea>
+      <mat-hint align="end">{{description.value?.length || 0}}/150</mat-hint>
+      <button mat-button *ngIf="description.dirty" matSuffix mat-icon-button aria-label="Clear" (click)="headerForm.controls['description'].reset()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="dataLoaded" appearance="outline" >
+      <mat-label>Industry</mat-label>
+      <input matInput placeholder="Industry" type="text" formControlName="industry" [matAutocomplete]="autoGroup"/>
+      <mat-autocomplete #autoGroup="matAutocomplete">
+        <mat-option *ngFor="let industry of industryGroupOptions | async" [value]="industry">
+          {{ industry }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-label class="form-label">Current Address</mat-label>
+    <div class="orient-contents-vertically-dialog" formGroupName="location">
+      <mat-form-field appearance="outline" >
+        <mat-label>Address</mat-label>
+        <textarea matInput formControlName="addressOne" type="text" placeholder="Address"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>Address 2</mat-label>
+        <textarea matInput formControlName="addressTwo" type="text" placeholder="Address 2"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>City</mat-label>
+        <input matInput formControlName="city" type="text" placeholder="City">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>State</mat-label>
+        <input type="text" matInput placeholder="State" formControlName="state" [matAutocomplete]="autoGroup2">
+        <mat-autocomplete #autoGroup2="matAutocomplete">
+          <mat-optgroup *ngFor="let group of stateGroupOptions | async" [label]="group.parent">
+            <mat-option *ngFor="let name of group.name" [value]="name">
+              {{ name }}
+            </mat-option>
+          </mat-optgroup>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>Postal Code</mat-label>
+        <input matInput #postalCode maxlength="5" type="number" formControlName="postalCode" placeholder="Postal Code">
+        <mat-hint align="end">{{ postalCode.value.length }} / 5</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <mat-label class="form-label">Social Media</mat-label>
+
+    <mat-form-field appearance="outline" >
+      <mat-label>LinkedIn</mat-label>
+      <input matInput placeholder="LinkedIn" type="text" formControlName="linkedIn"/>
+    </mat-form-field>
+    
+    <div class="orient-contents-horizontally-dialog">
+      <span class="horizontal-spacer"></span>
+      <span class="horizontal-spacer"></span>
+      <button mat-raised-button color="primary" [disabled]="!headerForm.valid" type="submit">Save</button>
+    </div>
+  </form>
+</div>

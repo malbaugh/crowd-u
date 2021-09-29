@@ -1,0 +1,123 @@
+<div *ngIf="!dataLoaded" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<html *ngIf="dataLoaded" class="profile-form-main orient-contents-vertically">
+  <div class="profile-action-icons orient-contents-horizontally">
+    <button (click)="OnSeeOwnerProfile()" matTooltip="See the owner of this contract." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">person</mat-icon></button>
+    
+    <span class="horizontal-spacer"></span>
+
+    <button *ngIf="participant && !following && !applied" (click)="OnFollow()" matTooltip="Follow this contract." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">turned_in_not</mat-icon></button>
+    <button *ngIf="participant && following && !applied" (click)="OnUnfollow()" matTooltip="Unfollow this contract." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">turned_in</mat-icon></button>
+    
+    <button *ngIf="participant && !applied && !contract.ContractData.Completed" (click)="OnInitializeSubmission()" matTooltip="Start preparing your application." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">post_add</mat-icon></button>
+    
+    <button *ngIf="myChallenge && !contract.ContractData.Completed" (click)="OnCloseChallenge()" matTooltip="Close this contract." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">lock</mat-icon></button>
+    <button *ngIf="myChallenge && !contract.ContractData.Completed" (click)="OnEdit()" matTooltip="Edit your contract header information." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">edit</mat-icon></button>
+  </div>
+  
+  <div class="profile-content">
+
+    <div class="profile-image-container center-contents">
+      <img [src]="contract.ContractData.Photo ? contract.ContractData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="profile-image primary-border">
+      <div (click)="file.click()" class="profile-edit-photo" *ngIf="myChallenge && !contract.ContractData.Completed"><button mat-mini-fab><mat-icon>edit</mat-icon></button></div>
+      <input id="imageInput" accept="image/*" type='file' (change)="EditProfileImage($event)" #file>
+    </div>
+
+    <div class="profile-information orient-contents-vertically">
+      <div class="orient-contents-horizontally profile-info-line">
+        <mat-card-title class="profile-title">{{contract.ContractData.Name}}</mat-card-title>
+        <span class="profile-padding"></span>
+      </div>
+
+      <mat-card-subtitle class="profile-title profile-info-line">{{contract.ContractData.Description}}</mat-card-subtitle>
+
+      <div class="orient-contents-horizontally profile-info-line">
+        <mat-icon color="primary">event_note</mat-icon>
+        <div class="profile-left-padding">Apply by {{contract.ContractData.SubmitDate.getUTCMonth() + 1}}/{{contract.ContractData.SubmitDate.getUTCDate()}}/{{contract.ContractData.SubmitDate.getUTCFullYear()}}</div>
+      </div>
+
+      <p *ngIf="contract.ContractData.UserLimit != -1" class="profile-statistics profile-info-line">Followers: {{followerCount}} | Applications Entered: {{applicationCount}} / {{contract.ContractData.UserLimit}}</p>
+      <p *ngIf="contract.ContractData.UserLimit == -1" class="profile-statistics profile-info-line">Followers: {{followerCount}} | Applications Entered: {{applicationCount}}</p>
+
+      <span class="profile-padding"></span>
+
+      <mat-chip-list class="orient-contents-horizontally profile-chips">
+        <mat-chip color="primary" selected>{{contract.ContractData.Concentrations[0]}}</mat-chip>
+        <mat-chip *ngIf="contract.ContractData.Concentrations[1]" color="primary" selected>{{contract.ContractData.Concentrations[1]}}</mat-chip>
+        <mat-chip *ngIf="contract.ContractData.Concentrations[2]" color="primary" selected>{{contract.ContractData.Concentrations[2]}}</mat-chip>
+      </mat-chip-list>
+    </div>
+
+    <span class="profile-padding"></span>
+
+    <div class="orient-contents-vertically profile-right-section">
+      <mat-card-title class="item-title">Prize: ${{contract.ContractData.PrizeTotal.toLocaleString('en')}}</mat-card-title>
+      <span class="profile-padding"></span>
+      <div *ngIf="participant" class="orient-contents-horizontally profile-competing">
+        <span class="profile-padding"></span>
+        <span class="profile-padding"></span>
+        <span class="profile-mobile-padding"></span>
+        <mat-chip *ngIf="applied" color="primary" selected>Application Submitted</mat-chip>
+        <span class="profile-mobile-padding"></span>
+      </div>
+
+      <span class="profile-padding"></span>
+      <div class="orient-contents-horizontally profile-competing">
+        <span class="profile-padding"></span>
+        <span class="profile-padding"></span>
+        <span class="profile-mobile-padding"></span>
+        <mat-chip *ngIf="contract.ContractData.Completed && !contract.ContractData.WinnerSelected" matTooltip="The contract closed and applicants are being evaluated." matTooltipPosition="above" color="primary" selected>Contract Closed</mat-chip>
+        <mat-chip *ngIf="contract.ContractData.Completed && contract.ContractData.WinnerSelected" matTooltip="Applicants have been selected." matTooltipPosition="above" color="primary" selected>Applicants Selected</mat-chip>
+        <span class="profile-mobile-padding"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-about orient-contents-vertically">
+    <div class="orient-contents-horizontally center-contents profile-about-line">
+      <mat-card-title class="profile-title">Information:</mat-card-title>
+      <span class="horizontal-spacer"></span>
+      <div *ngIf="myChallenge && !contract.ContractData.Completed"><button (click)="OnEditAbout()" mat-icon-button><mat-icon color="primary">edit</mat-icon></button></div>
+    </div>
+
+    <mat-tab-group [color]="'primary'" [backgroundColor]="'accent'" class="profile-tabs">      
+      <mat-tab label="Description" *ngIf="contract.ContractData.About">
+        <div [innerHtml]="contract.ContractData.About"></div>
+      </mat-tab>
+    
+      <mat-tab label="Compensation" *ngIf="contract.ContractData.Prizes">
+        <div [innerHtml]="contract.ContractData.Prizes"></div>
+      </mat-tab>
+
+      <mat-tab label="Eligibility" *ngIf="contract.ContractData.Eligibility">
+        <div [innerHtml]="contract.ContractData.Eligibility"></div>
+      </mat-tab>
+
+      <mat-tab label="Rules" *ngIf="contract.ContractData.Rules">
+        <div [innerHtml]="contract.ContractData.Rules"></div>
+      </mat-tab>
+
+      <mat-tab label="Requirements" *ngIf="contract.ContractData.Requirements">
+        <div [innerHtml]="contract.ContractData.Requirements"></div>
+      </mat-tab>
+
+      <mat-tab label="Selection Criteria" *ngIf="contract.ContractData.JudgingCriteria">
+        <div [innerHtml]="contract.ContractData.JudgingCriteria"></div>
+      </mat-tab>
+
+      <mat-tab label="Judges" *ngIf="contract.ContractData.Judges">
+        <div [innerHtml]="contract.ContractData.Judges"></div>
+      </mat-tab>
+
+      <mat-tab label="Sponsors" *ngIf="contract.ContractData.Sponsors">
+        <div [innerHtml]="contract.ContractData.Sponsors"></div>
+      </mat-tab>
+
+      <mat-tab label="Resources" *ngIf="contract.ContractData.Resources">
+        <div [innerHtml]="contract.ContractData.Resources"></div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</html>

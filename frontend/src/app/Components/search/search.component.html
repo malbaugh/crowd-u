@@ -1,0 +1,351 @@
+<div *ngIf="!dataLoaded1 && !dataLoaded2 && !dataLoaded3 && !dataLoaded4" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="(!loaded1 || !loaded2 || !loaded3 || !loaded4) && (dataLoaded1 && dataLoaded2 && dataLoaded3 && dataLoaded4)" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<html *ngIf="dataLoaded1 && dataLoaded2 && dataLoaded3 && dataLoaded4" class="orient-contents-vertically search-form-main">
+  <mat-toolbar class="primary-light search-bar">
+    <button class="sidenav-filter-button" type="button" color="primary" (click)="drawer.toggle()" matTooltip="Filter the results." matTooltipPosition="above" mat-mini-fab><mat-icon>filter_list</mat-icon></button>
+    <span class="horizontal-spacer"></span>
+    <form [formGroup]="searchForm" (ngSubmit)="OnSearchSubmit()">
+      <mat-form-field class="search-form">
+        <input formControlName="search" type="text" matInput>
+      </mat-form-field>
+
+      <button (onClick)="OnSearchSubmit()" mat-icon-button>
+        <mat-icon color="primary" matSuffix>search</mat-icon>
+      </button>
+    </form>
+  </mat-toolbar>
+
+  <mat-drawer-container class="search-container">
+    <mat-drawer class="sidenav" mode="side" #drawer>
+      <form class="sidenav-content" [formGroup]="filterForm" (ngSubmit)="OnSearchSubmit()">
+        <div class="orient-contents-horizontally sidenav-filter-title sidenav-information">
+          <mat-card-title class="item-title-no-padding">FILTERS</mat-card-title>
+          <span class="horizontal-spacer"></span>
+          <div><button color="primary" (click)="OnResetFilters()" mat-icon-button><mat-icon matSuffix>cached</mat-icon></button></div>
+        </div>
+
+        <div class="orient-contents-vertically sidenav-information" *ngIf="currentTabIndex == 0 || currentTabIndex == 1">
+          <mat-label>Date of Challenge</mat-label>
+          <mat-form-field appearance="outline" >
+            <mat-label>Starting Date</mat-label>
+            <input matInput [matDatepicker]="picker1" placeholder="Starting Date" formControlName="start" >
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" >
+            <mat-label>Closing Date</mat-label>
+            <input matInput [matDatepicker]="picker2" placeholder="Closing Date" formControlName="close" >
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+
+          <mat-label>Amount Awarded</mat-label>
+          <div class="orient-contents-vertically" formGroupName="award">
+            <mat-form-field appearance="outline">
+              <span matPrefix>$ &nbsp;</span>
+              <mat-label>Minimum</mat-label>
+              <input matInput formControlName="min" type="number" placeholder="Min">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <span matPrefix>$ &nbsp;</span>
+              <mat-label>Maximum</mat-label>
+              <input matInput formControlName="max" type="number" placeholder="Max">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="orient-contents-vertically sidenav-information" *ngIf="currentTabIndex == 2">
+          <mat-label>Major</mat-label>
+          <mat-form-field appearance="outline" >
+            <mat-select placeholder="Major" type="text" formControlName="major">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let i of majors" [value]="i">
+                {{ i }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-label>Education Status</mat-label>
+          <mat-form-field appearance="outline" >
+            <mat-select placeholder="Education Status" type="text" formControlName="educationStatus">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let i of edStatuses" [value]="i.name">
+                {{ i.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-label>Travel Availability</mat-label>
+          <mat-form-field appearance="outline" >
+            <mat-select placeholder="Travel Availability" type="text" formControlName="travelAvailability">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let j of availabilities" [value]="j.name">
+                {{ j.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-label>University</mat-label>
+          <mat-form-field appearance="outline" >
+            <mat-select placeholder="University" type="text" formControlName="university">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let i of universities" [value]="i">
+                {{ i }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="orient-contents-vertically sidenav-information" *ngIf="currentTabIndex == 3">
+          <mat-label>Industry</mat-label>
+          <mat-form-field appearance="outline" >
+            <mat-select placeholder="Industry" type="text" formControlName="industry">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let i of industries" [value]="i">
+                {{ i }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="orient-contents-vertically sidenav-information" *ngIf="currentTabIndex == 2 || currentTabIndex == 3">
+          <mat-label>Address</mat-label>
+          <mat-form-field appearance="outline" >
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" type="text" placeholder="City">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>State</mat-label>
+            <mat-select type="text" formControlName="state">
+              <mat-option>None</mat-option>
+              <mat-optgroup *ngFor="let group of states" [label]="group.parent">
+                <mat-option *ngFor="let name of group.name" [value]="name">
+                  {{ name }}
+                </mat-option>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="currentTabIndex != 3" class="orient-contents-vertically sidenav-information">
+          <mat-label>Concentrations</mat-label>
+          <mat-form-field appearance="outline" >
+            <mat-label>Concentration 1</mat-label>
+            <mat-select type="text" formControlName="concentrationOne">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let i of concentrations" [value]="i">
+                {{ i }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" >
+            <mat-label>Concentration 2</mat-label>
+            <mat-select type="text" formControlName="concentrationTwo">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let i of concentrations" [value]="i">
+                {{ i }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" >
+            <mat-label>Concentration 3</mat-label>
+            <mat-select type="text" formControlName="concentrationThree">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let i of concentrations" [value]="i">
+                {{ i }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="orient-contents-vertically sidenav-information">
+          <div class="orient-contents-horizontally">
+            <span class="horizontal-spacer"></span>
+            <span class="horizontal-spacer"></span>
+            <button mat-raised-button color="primary" type="submit">Go</button>
+          </div>
+        </div>
+      </form>
+    </mat-drawer>
+
+    <mat-drawer-content class="drawer-content">
+      <mat-tab-group class="tab-container" (selectedTabChange)="TabChanged($event)">
+        <mat-tab label="Contests">
+          <div *ngIf="loaded1" class="tab-content">
+            <mat-list *ngFor="let contest of pageContests" [class.selected]="contest === selectedContest" (click)="onSelect(contest)">
+              <mat-card class="item-card">
+                <div><img [src]="contest.ContestData.Photo ? contest.ContestData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="item-header-image primary-border"></div>
+                <div class="item-content orient-contents-vertically">
+                  <mat-card-title class="profile-title profile-about-line">{{contest.ContestData.Name}}</mat-card-title>
+                  <p class="profile-subtitle profile-about-line">{{contest.ContestData.Description}}</p>
+                  <div class="orient-contents-horizontally left-justify-contents">
+                    <mat-icon color="primary">event_note</mat-icon>
+                    <div class="profile-left-padding">Entries due by {{contest.ContestData.SubmitDate.getUTCMonth() + 1}}/{{contest.ContestData.SubmitDate.getUTCDate()}}/{{contest.ContestData.SubmitDate.getUTCFullYear()}}</div>
+                  </div>
+
+                  <span class="search-mobile-remove-padding"></span>
+                  <mat-chip-list class="orient-contents-horizontally search-chips">
+                    <mat-chip color="primary" selected>{{contest.ContestData.Concentrations[0]}}</mat-chip>
+                    <mat-chip *ngIf="contest.ContestData.Concentrations[1]" color="primary" selected>{{contest.ContestData.Concentrations[1]}}</mat-chip>
+                    <mat-chip *ngIf="contest.ContestData.Concentrations[2]" color="primary" selected>{{contest.ContestData.Concentrations[2]}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+
+                <span class="search-mobile-remove-padding"></span>
+                <div class="item-right">
+                  <mat-card-title class="item-title">Prize: ${{contest.ContestData.PrizeTotal.toLocaleString('en')}}</mat-card-title>
+
+                  <span class="search-mobile-remove-padding"></span>
+                  <span class="search-mobile-remove-padding"></span>
+                </div>
+              </mat-card>
+            </mat-list>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Contracts">
+          <div *ngIf="loaded2" class="tab-content">
+            <mat-list *ngFor="let contract of pageContracts" [class.selected]="contract === selectedContract" (click)="onSelect(contract)">
+              <mat-card class="item-card">
+                <div><img [src]="contract.ContractData.Photo ? contract.ContractData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="item-header-image primary-border"></div>
+                <div class="item-content orient-contents-vertically">
+                  <mat-card-title class="profile-title profile-about-line">{{contract.ContractData.Name}}</mat-card-title>
+
+                  <p class="profile-subtitle profile-about-line">{{contract.ContractData.Description}}</p>
+
+                  <div class="orient-contents-horizontally left-justify-contents">
+                    <mat-icon color="primary">event_note</mat-icon>
+                    <div class="profile-left-padding">Apply by {{contract.ContractData.SubmitDate.getUTCMonth() + 1}}/{{contract.ContractData.SubmitDate.getUTCDate()}}/{{contract.ContractData.SubmitDate.getUTCFullYear()}}</div>
+                  </div>
+
+                  <span class="search-mobile-remove-padding"></span>
+                  <mat-chip-list class="orient-contents-horizontally search-chips">
+                    <mat-chip color="primary" selected>{{contract.ContractData.Concentrations[0]}}</mat-chip>
+                    <mat-chip *ngIf="contract.ContractData.Concentrations[1]" color="primary" selected>{{contract.ContractData.Concentrations[1]}}</mat-chip>
+                    <mat-chip *ngIf="contract.ContractData.Concentrations[2]" color="primary" selected>{{contract.ContractData.Concentrations[2]}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+
+                <span class="search-mobile-remove-padding"></span>
+                <div class="item-right">
+                  <mat-card-title class="item-title">Prize: ${{contract.ContractData.PrizeTotal.toLocaleString('en')}}</mat-card-title>
+                  <span class="search-mobile-remove-padding"></span>
+                  <span class="search-mobile-remove-padding"></span>
+                </div>
+              </mat-card>
+            </mat-list>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Participants">
+          <div *ngIf="loaded3" class="tab-content">
+            <mat-list *ngFor="let user of pageUsers" [class.selected]="user === selectedUser" (click)="onSelect(user)">
+              <mat-card class="item-card">
+                <div>
+                  <img [src]="user.ParticipantProfileData.Photo ? user.ParticipantProfileData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultProfilePicture.png'" class="item-header-image primary-border">
+                </div>
+
+                <div class="item-content orient-contents-vertically">
+                  <mat-card-title class="profile-title profile-about-line">{{user.ParticipantRegistrationData.FirstName}} {{user.ParticipantRegistrationData.LastName}}</mat-card-title>
+                  <p class="profile-subtitle profile-about-line">{{user.ParticipantProfileData.Major}} <span *ngIf="user.ParticipantProfileData.EducationStatus">|</span> {{user.ParticipantProfileData.EducationStatus}} <span *ngIf="user.ParticipantProfileData.City">|</span> {{user.ParticipantProfileData.City}}<span *ngIf="user.ParticipantProfileData.State">,</span> {{user.ParticipantProfileData.State}}</p>
+                  <p class="profile-subtitle profile-about-line">{{user.ParticipantProfileData.Description}}</p>
+                  <div *ngIf="" class="orient-contents-vertically">
+                    <div>96% Job Success</div>
+                    <mat-progress-bar class="profile-progress-bar" mode="determinate" value="96"></mat-progress-bar>
+                  </div>
+
+                  <span class="search-mobile-remove-padding"></span>
+                  <mat-chip-list class="orient-contents-horizontally search-chips">
+                    <mat-chip *ngIf="user.ParticipantProfileData.Concentration[0]" color="primary" selected>{{user.ParticipantProfileData.Concentration[0]}}</mat-chip>
+                    <mat-chip *ngIf="user.ParticipantProfileData.Concentration[1]" color="primary" selected>{{user.ParticipantProfileData.Concentration[1]}}</mat-chip>
+                    <mat-chip *ngIf="user.ParticipantProfileData.Concentration[2]" color="primary" selected>{{user.ParticipantProfileData.Concentration[2]}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+
+                <span class="search-mobile-remove-padding"></span>
+                <div class="item-right">
+                  <mat-card-title class="item-title">{{user.ParticipantRegistrationData.University}}</mat-card-title>
+                  <span class="search-mobile-remove-padding"></span>
+                  <div *ngIf="" class="orient-contents-horizontally center-contents search-mobile-button-spacing">
+                    <span class="search-mobile-remove-padding"></span>
+                    <span class="search-mobile-remove-padding"></span>
+                    <button mat-raised-button color="primary">MESSAGE</button>
+                  </div>
+
+                  <span class="search-mobile-remove-padding"></span>
+                </div>
+              </mat-card>
+            </mat-list>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Organizations">
+          <div *ngIf="loaded4" class="tab-content">
+            <mat-list *ngFor="let challenger of pageChallengers" [class.selected]="challenger === selectedChallenger" (click)="onSelect(challenger)">
+              <mat-card class="item-card">
+                <div>
+                  <img [src]="challenger.ChallengeOwnerProfileData.Photo ? challenger.ChallengeOwnerProfileData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultProfilePicture.png'" class="item-header-image primary-border">
+                </div>
+
+                <div class="item-content orient-contents-vertically">
+                  <mat-card-title class="profile-title profile-about-line">{{challenger.Department}}<span *ngIf="challenger.Department"> | </span>{{challenger.ChallengerRegistrationData.FirstName}} {{challenger.ChallengerRegistrationData.LastName}}</mat-card-title>
+                  <p class="profile-subtitle profile-about-line">{{challenger.ChallengeOwnerProfileData.Description}}</p>
+                  <div *ngIf="challenger.ChallengeOwnerProfileData.State" class="orient-contents-horizontally left-justify-contents">
+                    <mat-icon color="primary">place</mat-icon>
+                    <div>{{challenger.ChallengeOwnerProfileData.City}}<span *ngIf="challenger.ChallengeOwnerProfileData.State">, </span>{{challenger.ChallengeOwnerProfileData.State}}</div>
+                  </div>
+
+                  <span class="search-mobile-remove-padding"></span>
+                  <div *ngIf="" class="orient-contents-vertically">
+                    <div>84% Job Satisfaction</div>
+                    <mat-progress-bar class="profile-progress-bar" mode="determinate" value="84"></mat-progress-bar>
+                  </div>
+
+                  <span class="search-mobile-remove-padding"></span>
+                  <mat-chip-list *ngIf="challenger.ChallengeOwnerProfileData.Industry" class="orient-contents-horizontally search-chips">
+                    <mat-chip color="primary" selected>{{challenger.ChallengeOwnerProfileData.Industry}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+
+                <span class="search-mobile-remove-padding"></span>
+                <div class="item-right">
+                  <span class="search-mobile-remove-padding"></span>
+                  <div class="orient-contents-horizontally center-contents search-mobile-button-spacing">
+                    <span class="search-mobile-remove-padding"></span>
+                    <span class="search-mobile-remove-padding"></span>
+                    <button color="primary" (click)="OnSeeChallenges(challenger)" mat-raised-button>ACTIVE CHALLENGES</button>
+                  </div>
+
+                  <span *ngIf="" class="search-mobile-remove-padding"></span>
+                  <div *ngIf="" class="orient-contents-horizontally center-contents">
+                    <span class="search-mobile-remove-padding"></span>
+                    <span class="search-mobile-remove-padding"></span>
+                    <button color="primary" mat-raised-button>MESSAGE</button>
+                  </div>
+                  
+                  <span class="search-mobile-remove-padding"></span>
+                </div>
+              </mat-card>
+            </mat-list>
+            
+          </div>
+        </mat-tab>
+
+      </mat-tab-group>
+      <span class="horizontal-spacer"></span>
+      <mat-paginator class="tab-paginator" *ngIf="currentTabIndex == 0" [pageIndex]="pageIndex1" [length]="allContests.length" [pageSize]="pageSize1" [pageSizeOptions]="pageSizeOptions" (page)="GetContests($event)"></mat-paginator>
+      <mat-paginator class="tab-paginator" *ngIf="currentTabIndex == 1" [pageIndex]="pageIndex2" [length]="allContracts.length" [pageSize]="pageSize2" [pageSizeOptions]="pageSizeOptions" (page)="GetContracts($event)"></mat-paginator>
+      <mat-paginator class="tab-paginator" *ngIf="currentTabIndex == 2" [pageIndex]="pageIndex3" [length]="allUsers.length" [pageSize]="pageSize3" [pageSizeOptions]="pageSizeOptions" (page)="GetStudents($event)"></mat-paginator>
+      <mat-paginator class="tab-paginator" *ngIf="currentTabIndex == 3" [pageIndex]="pageIndex4" [length]="allChallengers.length" [pageSize]="pageSize4" [pageSizeOptions]="pageSizeOptions" (page)="GetOrganizations($event)"></mat-paginator>
+    </mat-drawer-content>
+
+  </mat-drawer-container>
+</html>

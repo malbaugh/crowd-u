@@ -1,0 +1,96 @@
+<div *ngIf="!dataLoaded" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<ul *ngIf="dataLoaded" class="dashboard-form-main">
+  <li *ngIf="(contests.length + contracts.length) > 0" class="dashboard-item orient-contents-vertically">
+    <mat-card>
+      <div class="orient-contents-horizontally center-contents">
+        <mat-card-title class="dashboard-title">Ongoing</mat-card-title>
+        <span class="horizontal-spacer"></span>
+        <button color="primary" (click)="OnSeeChallenges()" mat-icon-button><mat-icon>more_vert</mat-icon></button>
+      </div>
+  
+      <div class="center-contents">
+        <google-chart class="dashboard-chart" #chart1
+          type="PieChart"
+          [data]="openChallengesData"
+          [options]="openChallengesOptions">
+        </google-chart>
+      </div>
+    </mat-card>
+  </li>
+
+  <li *ngIf="(contestsComplete.length + contractsComplete.length) > 0" class="dashboard-item orient-contents-vertically">
+    <mat-card>
+      <div class="orient-contents-horizontally center-contents">
+        <mat-card-title class="dashboard-title">Completed</mat-card-title>
+        <span class="horizontal-spacer"></span>
+        <button color="primary" (click)="OnSeeCompletedChallenges()" mat-icon-button><mat-icon>more_vert</mat-icon></button>
+      </div>
+  
+      <div class="center-contents">
+        <google-chart class="dashboard-chart" #chart2
+          type="PieChart"
+          [data]="completeChallengesData"
+          [options]="completeChallengesOptions">
+        </google-chart>
+      </div>
+    </mat-card>
+  </li>    
+
+  <li *ngIf="" class="dashboard-item orient-contents-vertically">
+    <mat-card>
+      <div class="orient-contents-horizontally center-contents">
+        <mat-card-title class="dashboard-title">Earnings</mat-card-title>
+        <span class="horizontal-spacer"></span>
+        <button color="primary" mat-icon-button><mat-icon>more_vert</mat-icon></button>
+      </div>
+      
+      <div class="center-contents dashboard-spending">
+        <google-chart class="dashboard-spending" #chart3
+          type="LineChart"
+          [data]="earningsData"
+          [options]="earningsOptions">
+        </google-chart>
+      </div>
+    </mat-card>
+  </li>
+
+  <li *ngIf="" class="dashboard-item orient-contents-vertically">
+    <mat-card>
+      <mat-card-title class="dashboard-title">Your Teams</mat-card-title>
+    </mat-card>
+  </li>
+
+  <li *ngIf="(contestsComplete.length + contractsComplete.length + contests.length + contracts.length) == 0" class="dashboard-item orient-contents-vertically">
+    <mat-card>
+      <div class="orient-contents-horizontally center-contents divider">
+        <mat-card-title class="dashboard-title">Welcome to Crowd-U!</mat-card-title>
+        <span class="horizontal-spacer"></span>
+        <span class="horizontal-spacer"></span>
+      </div>
+      <div class="dashboard-line">
+        The Crowd-U platform has a few features to help you get the most out of the experience.
+      </div>
+      <div class="dashboard-line">
+        This is your "Home" page. Once you follow or submit to a contest or contract, we will show you your progress and other relevant statistics about those challenges here. Get to this page anytime by pressing the Home button on the navigation bar.
+      </div>
+      <div class="dashboard-line"> 
+        Quickly find the contests and contracts you follow by clicking the My Challenges button on the navigation bar.
+      </div>
+      <div class="dashboard-line">
+        If you don't want to submit to challenges on your own, head over to the Teams button on the navigation bar. This will allow you to create teams with other individuals and complete challenges together.
+      </div>
+      <div class="dashboard-line">
+        Change and view your profile on Crowd-U by clicking the My Profile button on the navigation bar.
+      </div>
+      <div class="dashboard-line">
+        Use the search bar above to find open challenges you can submit to.
+      </div>
+      <div>
+        If you have any issues or would like to suggest features, please reach out to us at support@crowd-u.com. Thank you!
+      </div>
+    </mat-card>
+  </li>
+</ul>

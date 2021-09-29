@@ -1,0 +1,155 @@
+<div *ngIf="!dataLoaded" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<html *ngIf="dataLoaded" class="profile-form-main orient-contents-vertically">
+  <div class="profile-action-icons orient-contents-horizontally">
+    <button (click)="OnSeeOwnerProfile()" matTooltip="See the owner of this contest." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">person</mat-icon></button>
+    <button *ngIf="myChallenge" (click)="OnGenerateRegistrationLink()" matTooltip="Get a direct registration link for this event." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">link</mat-icon></button>
+    
+    <span class="horizontal-spacer"></span>
+    <button *ngIf="participant && !following && !submitted && !registered" (click)="OnFollow()" matTooltip="Follow this contest." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">turned_in_not</mat-icon></button>
+    <button *ngIf="participant && following && !submitted && !registered" (click)="OnUnfollow()" matTooltip="Unfollow this contest." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">turned_in</mat-icon></button>
+    
+    <button *ngIf="participant && !submitted && !contest.ContestData.Completed && !registered" (click)="OnRegister()" matTooltip="Register for this contest." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">person_add</mat-icon></button>
+    <button *ngIf="participant && !submitted && !contest.ContestData.Completed && registered" (click)="OnUnregister()" matTooltip="Unregister for this contest." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">person_add_disabled</mat-icon></button>
+
+    <button *ngIf="participant && !submitted && !contest.ContestData.Completed && registered" (click)="OnInitializeSubmission()" matTooltip="Start preparing your submission." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">post_add</mat-icon></button>
+
+    <button *ngIf="myChallenge && !contest.ContestData.Completed" (click)="OnCloseChallenge()" matTooltip="Close this contest." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">lock</mat-icon></button>
+    <button *ngIf="myChallenge && !contest.ContestData.Completed" (click)="OnEdit()" matTooltip="Edit your contest header information." matTooltipPosition="above" mat-icon-button><mat-icon color="accent">edit</mat-icon></button>
+  </div>
+  
+  <div class="profile-content">
+    <div class="profile-image-container center-contents">
+      <img [src]="contest.ContestData.Photo ? contest.ContestData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="profile-image primary-border">
+      <div (click)="file.click()" class="profile-edit-photo" *ngIf="myChallenge && !contest.ContestData.Completed"><button mat-mini-fab><mat-icon>edit</mat-icon></button></div>
+      <input id="imageInput" accept="image/*" type='file' (change)="EditProfileImage($event)" #file>
+    </div>
+
+    <div class="profile-information orient-contents-vertically">
+      <div class="orient-contents-horizontally profile-info-line">
+        <h2 class="profile-title">{{contest.ContestData.Name}}</h2>
+        <span class="profile-padding"></span>
+      </div>
+
+      <p class="profile-subtitle profile-info-line">{{contest.ContestData.Description}}</p>
+      <div class="orient-contents-horizontally profile-info-line">
+        <mat-icon color="primary">event_note</mat-icon>
+        <p class="profile-left-padding profile-subtitle">Entries due by {{contest.ContestData.SubmitDate.getUTCMonth() + 1}}/{{contest.ContestData.SubmitDate.getUTCDate()}}/{{contest.ContestData.SubmitDate.getUTCFullYear()}}</p>
+      </div>
+      
+      <p *ngIf="contest.ContestData.UserLimit != -1" class="profile-statistics profile-info-line">Registered: {{registrationCount}} / {{contest.ContestData.UserLimit}} | Followers: {{followerCount}} | Submissions Entered: {{submissionCount}}</p>
+      <p *ngIf="contest.ContestData.UserLimit == -1" class="profile-statistics profile-info-line">Registered: {{registrationCount}} | Followers: {{followerCount}} | Submissions Entered: {{submissionCount}}</p>
+
+      <span class="profile-padding"></span>
+      <mat-chip-list class="orient-contents-horizontally profile-chips">
+        <mat-chip color="primary" selected>{{contest.ContestData.Concentrations[0]}}</mat-chip>
+        <mat-chip *ngIf="contest.ContestData.Concentrations[1]" color="primary" selected>{{contest.ContestData.Concentrations[1]}}</mat-chip>
+        <mat-chip *ngIf="contest.ContestData.Concentrations[2]" color="primary" selected>{{contest.ContestData.Concentrations[2]}}</mat-chip>
+      </mat-chip-list>
+    </div>
+
+    <span class="profile-padding"></span>
+    <div class="orient-contents-vertically profile-right-section">
+      <h2 class="profile-title">Prize: ${{contest.ContestData.PrizeTotal.toLocaleString('en')}}</h2>
+      <span class="profile-padding"></span>
+      <div *ngIf="participant" class="orient-contents-horizontally profile-competing">
+        <span class="profile-padding"></span>
+        <span class="profile-padding"></span>
+        <span class="profile-mobile-padding"></span>
+        <mat-chip *ngIf="!submitted && registered" color="primary" selected>Registered</mat-chip>
+        <mat-chip *ngIf="submitted" color="primary" selected>Submission Complete</mat-chip>
+        <span class="profile-mobile-padding"></span>
+      </div>
+
+      <span class="profile-padding"></span>
+      <div class="orient-contents-horizontally profile-competing">
+        <span class="profile-padding"></span>
+        <span class="profile-padding"></span>
+        <span class="profile-mobile-padding"></span>
+        <mat-chip *ngIf="contest.ContestData.Completed && !contest.ContestData.WinnerSelected" matTooltip="The contest closed and winners are being selected." matTooltipPosition="above" color="primary" selected>Contest Closed</mat-chip>
+        <mat-chip *ngIf="contest.ContestData.Completed && contest.ContestData.WinnerSelected" matTooltip="The winners have been selected." matTooltipPosition="above" color="primary" selected>Winners Selected</mat-chip>
+        <span class="profile-mobile-padding"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-about orient-contents-vertically">
+    <div class="orient-contents-horizontally center-contents profile-about-line">
+      <mat-card-title class="profile-title">Information:</mat-card-title>
+      <span class="horizontal-spacer"></span>
+      <div *ngIf="myChallenge && !contest.ContestData.Completed"><button (click)="OnEditAbout()" mat-icon-button><mat-icon color="primary">edit</mat-icon></button></div>
+    </div>
+
+    <mat-tab-group [color]="'primary'" [backgroundColor]="'accent'" class="profile-tabs">      
+      <mat-tab class="profile-tab" label="Winners" *ngIf="contest.ContestData.WinnerSelected">
+        <div class="winner-selection-list">
+          <mat-list *ngFor="let submission of allSubmissions" [class.selected]="submission === selectedSubmission">
+            <mat-card class="winner-selection-card">
+              <div class="winner-selection-image-container center-contents">
+                <img [src]="submission.Photo ? submission.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultChallengePicture.png'" class="winner-selection-image primary-border">
+              </div>
+          
+              <div class="winner-selection-information orient-contents-vertically">
+                <h2 class="winner-selection-title">{{submission.Name}}</h2>
+                <p class="winner-selection-subtitle">{{submission.Description}}</p>
+          
+                <span class="winner-selection-padding"></span>
+          
+                <mat-chip-list class="orient-contents-horizontally">
+                  <mat-chip *ngIf="submission.TeamName" color="primary" selected>Team: {{submission.TeamName}}</mat-chip>
+                  <mat-chip *ngIf="!submission.TeamName" color="primary" selected>Username: {{submission.Members[0]}}</mat-chip>
+                  <mat-chip *ngIf="submission.WinnerType" color="primary" selected>{{submission.WinnerType}}</mat-chip>
+                </mat-chip-list>
+              </div>
+              <span class="winner-selection-padding"></span>
+
+              <div class="orient-contents-horizontally center-contents">
+                <span class="winner-selection-padding"></span>
+                <div><button (click)="OnSeeSubmitterProfile(submission)" matTooltip="See the leader of this submission." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">person</mat-icon></button></div>
+                <div><button *ngIf="!contest.ContestData.IsConfidential" (click)="OnSeeSubmission(submission)" matTooltip="See this submission's profile." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">insert_drive_file</mat-icon></button></div>
+              </div>
+            </mat-card>
+          </mat-list>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Description" *ngIf="contest.ContestData.About">
+        <div [innerHtml]="contest.ContestData.About"></div>
+      </mat-tab>
+    
+      <mat-tab label="Prizes" *ngIf="contest.ContestData.Prizes">
+        <div [innerHtml]="contest.ContestData.Prizes"></div>
+      </mat-tab>
+
+      <mat-tab label="Eligibility" *ngIf="contest.ContestData.Eligibility">
+        <div [innerHtml]="contest.ContestData.Eligibility"></div>
+      </mat-tab>
+
+      <mat-tab label="Rules" *ngIf="contest.ContestData.Rules">
+        <div [innerHtml]="contest.ContestData.Rules"></div>
+      </mat-tab>
+
+      <mat-tab label="Requirements" *ngIf="contest.ContestData.Requirements">
+        <div [innerHtml]="contest.ContestData.Requirements"></div>
+      </mat-tab>
+
+      <mat-tab label="Judging Criteria" *ngIf="contest.ContestData.JudgingCriteria">
+        <div [innerHtml]="contest.ContestData.JudgingCriteria"></div>
+      </mat-tab>
+
+      <mat-tab label="Judges" *ngIf="contest.ContestData.Judges">
+        <div [innerHtml]="contest.ContestData.Judges"></div>
+      </mat-tab>
+
+      <mat-tab label="Sponsors" *ngIf="contest.ContestData.Sponsors">
+        <div [innerHtml]="contest.ContestData.Sponsors"></div>
+      </mat-tab>
+
+      <mat-tab label="Resources" *ngIf="contest.ContestData.Resources">
+        <div [innerHtml]="contest.ContestData.Resources"></div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</html>

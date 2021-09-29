@@ -1,0 +1,88 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">EDIT INFO</div>
+    <span class="horizontal-spacer"></span>
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+  
+  <form class="orient-contents-vertically-dialog popup-form-content" [formGroup]="headerForm" (ngSubmit)="OnSubmitHeader()">
+    <mat-label class="form-label">Contract Information</mat-label>
+    <mat-form-field appearance="outline">
+      <mat-label>Name of Contract</mat-label>
+      <input matInput placeholder="Name" formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" >
+      <mat-label>Short Description</mat-label>
+      <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5" placeholder="Description" maxlength="200" type="text" formControlName="description"></textarea>
+      <mat-hint align="end">{{description.value?.length || 0}}/200</mat-hint>
+      <button mat-button *ngIf="description.dirty" matSuffix mat-icon-button aria-label="Clear" (click)="challengeCreateForm.controls['description'].reset()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <div *ngIf="dataLoaded" class="orient-contents-vertically-dialog" formGroupName="concentration">
+      <mat-form-field appearance="outline" >
+        <mat-label>Concentration 1</mat-label>
+        <input matInput placeholder="Concentration" type="text" formControlName="concentration1" [matAutocomplete]="autoGroup4"/>
+        <mat-autocomplete #autoGroup4="matAutocomplete">
+          <mat-option *ngFor="let concentration of concentrationGroupOptions1 | async" [value]="concentration">
+            {{ concentration }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>Concentration 2 (optional)</mat-label>
+        <input matInput placeholder="Concentration" type="text" formControlName="concentration2" [matAutocomplete]="autoGroup5"/>
+        <mat-autocomplete #autoGroup5="matAutocomplete">
+          <mat-option *ngFor="let concentration of concentrationGroupOptions2 | async" [value]="concentration">
+            {{ concentration }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" >
+        <mat-label>Concentration 3 (optional)</mat-label>
+        <input matInput placeholder="Concentration" type="text" formControlName="concentration3" [matAutocomplete]="autoGroup6"/>
+        <mat-autocomplete #autoGroup6="matAutocomplete">
+          <mat-option *ngFor="let concentration of concentrationGroupOptions3 | async" [value]="concentration">
+            {{ concentration }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    
+    <mat-form-field appearance="outline">
+      <mat-label>Challenge Start Date</mat-label>
+      <input matInput [matDatepicker]="startPicker" placeholder="Start Date"
+        formControlName="registerDate">
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Challenge End Date</mat-label>
+      <input matInput [matDatepicker]="endPicker" placeholder="End Date" formControlName="submitDate">
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-checkbox class="divider" [(ngModel)]="limitUsers" [ngModelOptions]="{standalone: true}" matTooltip="Check if you want to set a limit to how many people can apply for your contract.">Limit Applicants</mat-checkbox>
+
+    <mat-form-field *ngIf="limitUsers" appearance="outline">
+      <mat-label>Application Limit</mat-label>
+      <input matInput placeholder="Application Limit" formControlName="userLimit" type="number" min="0"/>
+    </mat-form-field>
+
+    <div class="orient-contents-horizontally-dialog">
+      <span class="horizontal-spacer"></span>
+      <span class="horizontal-spacer"></span>
+      <button mat-raised-button color="primary" type="submit">Save</button>
+    </div>
+  </form>
+</div>

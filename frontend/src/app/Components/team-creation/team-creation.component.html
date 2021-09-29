@@ -1,0 +1,79 @@
+<div *ngIf="!dataLoaded" class="data-loader-dialog"><mat-spinner mode="indeterminate"></mat-spinner></div>
+
+<div class="popup-edit-about-form">
+  <header class="popup-form-header orient-contents-horizontally-dialog">
+    <div class="popup-form-title">CREATE A TEAM</div>
+    <span class="horizontal-spacer"></span>
+    <button color="warn" (click)="OnExit()" mat-button>
+      <mat-icon color="warn">close</mat-icon>
+    </button>
+  </header>
+
+  <div class="popup-form-content">
+    <form class="orient-contents-vertically-dialog" [formGroup]="newTeamForm" #myForm1="ngForm">
+      <mat-label class="teams-title">Team Name</mat-label>
+  
+      <mat-form-field appearance="outline" >
+        <mat-label>Enter Your Team Name</mat-label>
+        <input matInput placeholder="Team Name" type="text" formControlName="teamName"/>
+      </mat-form-field>
+  
+      <mat-label class="teams-title">Team Members</mat-label>
+      <mat-list *ngFor="let member of newTeam">
+        <mat-card class="teams-profile-card">
+          <img [src]="member.ParticipantProfileData.Photo ? member.ParticipantProfileData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultProfilePicture.png'" class="teams-profile-image teams-mobile-disappear-two">
+          
+          <div class="teams-profile-content">
+            <div class="teams-title">{{member.ParticipantRegistrationData.FirstName}} {{member.ParticipantRegistrationData.LastName}}</div>
+            <div class="teams-subtitle">{{member.ParticipantProfileData.Major}}</div>
+          </div>
+  
+          <mat-chip-list class="orient-contents-horizontally-dialog teams-chips teams-mobile-disappear">
+            <mat-chip color="accent" *ngIf="member.ParticipantRegistrationData.Username == user.ParticipantRegistrationData.Username" selected>TEAM LEADER</mat-chip>
+            <mat-chip color="primary" *ngIf="member.ParticipantProfileData.Concentration[0]" selected>{{member.ParticipantProfileData.Concentration[0]}}</mat-chip>
+          </mat-chip-list>
+          
+          <span class="horizontal-spacer"></span>
+          <button class="teams-mobile-disappear-two" *ngIf="member.ParticipantRegistrationData.Username != user.ParticipantRegistrationData.Username" (click)="OnSeeProfile(member)" matTooltip="See this person's profile." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">perm_identity</mat-icon></button>
+          <button *ngIf="member.ParticipantRegistrationData.Username != user.ParticipantRegistrationData.Username" (click)="OnRemoveFromTeam(member)" matTooltip="Remove this person from the team." matTooltipPosition="above"mat-icon-button><mat-icon color="warn">close</mat-icon></button>
+        </mat-card>
+      </mat-list>
+    </form>
+  
+    <div class="teams-divider"></div>
+    <mat-divider></mat-divider>
+    <div class="teams-divider"></div>
+  
+    <form class="orient-contents-horizontally-dialog" #myForm2="ngForm" [formGroup]="newMemberForm" (ngSubmit)="OnAddNewMember(myForm2)">
+      <div class="orient-contents-vertically-dialog teams-search">
+        <mat-label>Add Another Team Member</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-label>Search Users</mat-label>
+          <input matInput placeholder="Name (Username)" formControlName="newMember" type="text" [matAutocomplete]="autoGroup"/>
+          <mat-autocomplete #autoGroup="matAutocomplete">
+            <mat-option *ngFor="let value of userGroupOptions | async" [value]="value">
+              {{ value }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      
+      <div class="orient-contents-vertically-dialog">
+        <span class="horizontal-spacer"></span>
+        <button class="teams-mobile-disappear-two" mat-raised-button color="primary" type="submit" [disabled]="!newMemberForm.valid">Add Member</button>
+        <button class="teams-mobile-appear-two" color="primary" type="submit" matTooltip="Add member." matTooltipPosition="above" [disabled]="!newMemberForm.valid" mat-mini-fab><mat-icon color="accent">add</mat-icon></button>
+        <span class="horizontal-spacer"></span>
+      </div>
+    </form>
+
+    <div class="teams-divider"></div>
+    <mat-divider></mat-divider>
+    <div class="teams-divider"></div>
+
+    <div class="orient-contents-horizontally-dialog teams-button">
+      <span class="horizontal-spacer"></span>
+      <span class="horizontal-spacer"></span>
+      <button mat-raised-button color="primary" (click)="OnSubmitTeam(myForm1)" [disabled]="(newTeam.length == 1) || !newTeamForm.valid">Create Team</button>
+    </div>
+  </div>
+</div>

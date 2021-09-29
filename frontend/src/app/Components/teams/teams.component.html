@@ -1,0 +1,92 @@
+<div *ngIf="!dataLoaded" class="data-loader">
+  <mat-spinner></mat-spinner>
+</div>
+
+<html *ngIf="dataLoaded" class="organization-form-main orient-contents-vertically">
+  <div class="organization-content">
+    <div class="organization-image-container center-contents">
+      <img [src]="user.ParticipantProfileData.Photo ? user.ParticipantProfileData.Photo : 'https://crowd-u-public-assets.s3.amazonaws.com/defaultProfilePicture.png'" class="organization-image primary-border">
+    </div>
+
+    <div class="organization-information orient-contents-vertically">
+      <h2 class="organization-title">{{user.ParticipantRegistrationData.FirstName}} {{user.ParticipantRegistrationData.LastName}}</h2>
+      <p class="organization-subtitle">{{user.ParticipantProfileData.Description}}</p>
+
+      <span class="divider"></span>
+
+      <mat-chip-list class="orient-contents-horizontally">
+        <mat-chip color="primary" *ngIf="user.ParticipantProfileData.Concentration[0]" selected>{{user.ParticipantProfileData.Concentration[0]}}</mat-chip>
+        <mat-chip class="teams-mobile-disappear-two" color="primary" *ngIf="user.ParticipantProfileData.Concentration[1]" selected>{{user.ParticipantProfileData.Concentration[1]}}</mat-chip>
+        <mat-chip class="teams-mobile-disappear" color="primary" *ngIf="user.ParticipantProfileData.Concentration[2]" selected>{{user.ParticipantProfileData.Concentration[2]}}</mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+  
+  <div *ngIf="isMemberTeamed || isTeamed" class="orient-contents-vertically organization-department">
+    <div class="orient-contents-horizontally center-contents">
+      <mat-card-title class="organization-title">My Teams:</mat-card-title>
+      <span class="horizontal-spacer"></span>
+      <button (click)="OnCreateTeam()" matTooltip="Create a team." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">add</mat-icon></button>
+    </div>
+
+    <mat-tab-group [color]="'primary'" [backgroundColor]="'accent'" class="profile-tabs">      
+      <mat-tab label="Leading" *ngIf="isTeamed">
+        <mat-list *ngFor="let team of teams">
+          <mat-card class="organization-profile-card">
+            <div class="organization-profile-content">
+              <h3 class="organization-title organization-about-line">{{team.Name}}</h3>
+              <mat-chip-list class="orient-contents-horizontally">
+                <mat-chip color="primary" selected># Members: {{team.Members.length}}</mat-chip>
+                <mat-chip color="accent" *ngIf="team.Challenges" class="teams-mobile-disappear" selected># Challenges: {{team.Challenges.length}}</mat-chip>
+              </mat-chip-list>
+            </div>
+    
+            <span class="horizontal-spacer"></span>
+    
+            <button *ngIf="" disabled="true" (click)="OnEditTeam(team)" matTooltip="Edit this team." matTooltipPosition="above" mat-icon-button><mat-icon color="primary">edit</mat-icon></button>
+            <button *ngIf="!team.Challenges" (click)="OnDeleteTeam(team)" matTooltip="Delete this team." matTooltipPosition="above" mat-icon-button><mat-icon color="warn">close</mat-icon></button>
+          </mat-card>
+        </mat-list>
+      </mat-tab>
+      <mat-tab label="Member" *ngIf="isMemberTeamed">
+        <div>
+          <mat-list *ngFor="let team of memberTeams">
+            <mat-card class="organization-profile-card">
+              <div class="organization-profile-content">
+                <h3 class="organization-title organization-about-line">{{team.Name}}</h3>
+                <mat-chip-list class="orient-contents-horizontally">
+                  <mat-chip color="primary" selected># Members: {{team.Members.length}}</mat-chip>
+                  <mat-chip color="accent" *ngIf="team.Challenges" class="teams-mobile-disappear" selected># Challenges: {{team.Challenges.length}}</mat-chip>
+                </mat-chip-list>
+              </div>
+      
+              <span class="horizontal-spacer"></span>
+      
+              <button (click)="OnLeaveTeam(team)" matTooltip="Leave this team." matTooltipPosition="above" mat-icon-button><mat-icon color="warn">close</mat-icon></button>
+            </mat-card>
+          </mat-list>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+
+    
+  </div>
+
+  <div *ngIf="!isMemberTeamed && !isTeamed" class="orient-contents-vertically organization-department">
+    <mat-card-title class="organization-title organization-about-line">Teams:</mat-card-title>
+
+    <div class="organization-about-line">
+      We help you manage your participation across many unique & diverse teams with our Team Management console. To create a new team, simply click the Create Team below.
+    </div>
+    
+    <div class="organization-about-line">
+      With this feature, you can keep track of all your teams and the challenges you are tackling together.
+    </div>
+
+    <div class="orient-contents-horizontally">
+      <span class="horizontal-spacer"></span>
+      <button color="primary" (click)="OnCreateTeam()" mat-raised-button>Create Team</button>
+      <span class="horizontal-spacer"></span>
+    </div>
+  </div>
+</html>
